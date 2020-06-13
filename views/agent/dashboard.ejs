@@ -37,6 +37,17 @@
                 <% }); %>
               <% } %>
 
+              <% if (typeof public_announcements != "undefined") { %>
+                <% public_announcements.forEach(function(pps) { %>
+                    <div class="col-md-12">
+                        <div class="alert alert-success" role="alert">
+                            <strong><%=pps.announcement_title%></strong>
+                            <%=pps.announcement_description%>
+                        </div>
+                    </div>
+                <% }); %>
+              <% } %>
+
         </div>
     
   

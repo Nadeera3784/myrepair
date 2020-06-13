@@ -21,10 +21,13 @@ const AgentController = {
 			}
 		});
 
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
+
 		response.status(200);
 		response.render("agent/dashboard", {
 			helper: request.helper,
-			user_private_announcements : user_private_announcements
+			user_private_announcements : user_private_announcements,
+			public_announcements : public_announcements
 		});
 	},
 	async orders(request, response, next){
