@@ -1,0 +1,119 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Settings</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Settings</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Update Settings</h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-primary btn-sm" href="<%=helper.base_url()%>agent/subscription">Subscription</a>
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>agent/change_password">Change Password</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <form action="<%=helper.base_url()%>agent/save_settings" method="post" id="instantValidator" accept-charset="utf-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="first_name">First name:</label>
+                                            <input type="text" class="form-control required" id="first_name" name="first_name"  autocomplete="off" value="<%=user.first_name%>">
+                                            <% if (typeof first_name_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : first_name_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                   </div>
+                                   <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="last_name">Last name:</label>
+                                            <input type="text" class="form-control required" id="last_name" name="last_name"  autocomplete="off" value="<%=user.last_name%>">
+                                            <% if (typeof last_name_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : last_name_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>                                  
+                               </div>
+                               <div class="row">
+                                   <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="email">Email:</label>
+                                            <input type="email" class="form-control required" id="email" name="email" autocomplete="off" value="<%=user.email%>">
+                                            <% if (typeof email_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : email_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="phone">Phone:</label>
+                                            <input type="number" class="form-control required" id="phone" name="phone" autocomplete="off" value="<%=user.phone%>">
+                                            <% if (typeof phone_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : phone_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                               </div>
+                               <div class="row">
+                                <div class="col-md-6">
+                                     <div class="form-group">
+                                         <label class="control-label mb-10" for="company">Company:</label>
+                                         <input type="text" class="form-control" id="company" name="company" autocomplete="off" value="<%=user.company%>">
+                                         <% if (typeof company_error != "undefined") { %>
+                                             <%- include('notification', {type: 'danger', message : company_error.msg}); %>
+                                         <% } %>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         <label class="control-label mb-10" for="address">Address :</label>
+                                         <input type="text" class="form-control" id="address" name="address" autocomplete="off" value="<%=user.address%>">
+                                         <% if (typeof address_error != "undefined") { %>
+                                             <%- include('notification', {type: 'danger', message : address_error.msg}); %>
+                                         <% } %>
+                                     </div>
+                                  </div>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="hidden" name="id" id="id" value="<%=user._id%>">
+                                    <button type="submit" class="btn btn-primary"><span class="btn-text">Save</span></button>
+                                </div>	
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

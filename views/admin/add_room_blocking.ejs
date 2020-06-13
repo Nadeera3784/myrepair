@@ -1,0 +1,97 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Room Bloking</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Room Bloking</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Add A New Block</h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>admin/room_blocking"> Back</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                             <form action="<%=helper.base_url()%>admin/add_action_blocking" method="post" id="addRoomFormx">
+
+                            <div class="form-inline mb-30">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="daterange" name="daterange"  autocomplete="off" placeholder="Select date">
+                                </div>
+                                <div class="form-group mr-15">
+                                    <select name="hotel_id" id="hotel_id" class="form-control select2x">
+                                        <option value="" selected="selected">--Select Hotel--</option>
+                                            <% hotels.forEach(function(hotel) { %>
+                                            <option value="<%=hotel._id %>"><%=helper.initial_capitalizer(hotel.hotel_title) %></option>
+                                            <% }); %>
+                                    </select>
+                                    </div>
+                                    <div class="form-group">
+                                            <button type="button" name="roomBlockSearch" id="roomBlockSearch" class="btn btn-primary">Search</button>
+                                            <button type="button" name="clearBlockSearch" id="clearBlockSearch" class="btn btn-default">Clear</button>
+                                    </div>
+                            </div> 
+
+                            <% if (typeof daterange_error != "undefined") { %>
+                                <%- include('notification', {type: 'danger', message : daterange_error.msg}); %>
+                            <% } %>
+
+                            <% if (typeof hotel_id_error != "undefined") { %>
+                                <%- include('notification', {type: 'danger', message : hotel_id_error.msg}); %>
+                            <% } %>
+
+
+                             <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Room Type</th>
+                                        <th>Availablity</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ajax-rooms">                                                                    
+                                </tbody>
+                            </table>
+
+                            <div class="form-group mb-0">
+                                <button type="submit" class="btn btn-primary"><span class="btn-text">Save</span></button>
+                            </div>	
+                        </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

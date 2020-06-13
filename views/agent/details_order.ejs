@@ -1,0 +1,115 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Order</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Order</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="clearfix">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Order Details - <%=order.order_reference%></h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>agent/orders"> Back</a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <ul class="data-details-list">
+                                <li>
+                                    <div class="data-details-head">Brand</div>
+                                    <div class="data-details-des">
+                                        <% brands.forEach(function(brand) { %>
+                                            <%-(order.brand_id.toString() == brand._id) ? helper.initial_capitalizer(brand.brand_name) : "";%>
+                                        <% }); %>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Model</div>
+                                    <div class="data-details-des">
+                                        <%-order.order_model;%>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Fault</div>
+                                    <div class="data-details-des">
+                                        <%-helper.htmlEscaper(order.order_fault);%>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Created</div>
+                                    <div class="data-details-des">
+                                        <%-helper.date_format(order.order_create_date, "YYYY-MM-DD");%>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Status</div>
+                                    <div class="data-details-des">
+                                        <span class="badge badge-primary"><%-helper.initial_capitalizer(order.order_status);%></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Customer name</div>
+                                    <div class="data-details-des">
+                                        <%-helper.htmlEscaper(helper.initial_capitalizer(order.order_customer_name));%>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Customer phone</div>
+                                    <div class="data-details-des">
+                                        <%-helper.initial_capitalizer(order.order_customer_phone);%>
+                                    </div>
+                                </li>
+                                <% if (order.order_customer_email != "") { %>
+                                <li>
+                                    <div class="data-details-head">Customer email</div>
+                                    <div class="data-details-des">
+                                        <%-order.order_customer_email;%>
+                                    </div>
+                                </li>
+                                <% } %>
+                                <% if (order.order_customer_address != "") { %>
+                                <li>
+                                    <div class="data-details-head">Customer address</div>
+                                    <div class="data-details-des">
+                                        <%-helper.htmlEscaper(order.order_customer_address);%>
+                                    </div>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

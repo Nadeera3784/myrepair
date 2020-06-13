@@ -1,0 +1,546 @@
+$(document).ready(function () {
+if($("#DatatableHolder").length > 0){
+    $("#DatatableHolder").dataTable({
+		"pageLength": 10,
+        isMobile: window.outerWidth < 800 ? true : false,
+        responsive: window.outerWidth < 800 ? true : false, 
+        "aLengthMenu": [[5, 10, 25, -1], [5, 10, 25, "All"]]
+    });
+
+    $('#DatatableHolder').delegate('#deleteLocation', 'click', function(){
+		var location_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this location?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_locations',
+					data: {location_id : location_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							location.reload();
+						}
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+
+	$('#DatatableHolder').delegate('#deleteSubscription', 'click', function(){
+		var subscription_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this subscription?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_subscription',
+					data: {subscription_id : subscription_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							location.reload();
+						}
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+	$('#DatatableHolder').delegate('#deleteUser', 'click', function(){
+		var user_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this user?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_user',
+					data: {user_id : user_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							location.reload();
+						}
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+	$('#DatatableHolder').delegate('#deleteBrand', 'click', function(){
+		var brand_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this brand?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_brand',
+					data: {brand_id : brand_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							location.reload();
+						}
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+	$('#DatatableHolder').delegate('#deleteAnnouncement', 'click', function(){
+		var announcement_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this brand?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_announcement',
+					data: {announcement_id : announcement_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							location.reload();
+						}
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+}
+
+if($(".select2").length > 0){
+	$('.select2').select2();
+}
+
+
+if($("#instantValidator").length > 0){
+	$("#instantValidator").validate();
+}
+
+if($("#HotelListTable").length > 0){
+	$('#HotelListTable').DataTable({
+		"isMobile": window.outerWidth < 800 ? true : false,
+        "responsive": window.outerWidth < 800 ? true : false, 
+		"pageLength": 10,
+		"processing": true, 
+		"serverSide": true,
+		'ajax': {
+			'type': 'POST',
+			'url': AppHelper.baseUrl +'admin/populate_DT_hotel_list',
+			"data": function (data) {
+				data.location_id = $('#location_id').val();
+			}
+		},
+		'columns':[
+			{ 'data': 'hotel_title'},
+			{ 'data': 'hotel_owner.first_name'},
+			{ 'data': 'hotel_location.locaton_name'},
+			{ 'data': 'isActive'},
+			{ 'data': 'createdAt'},
+			{ 'data': '_id'},
+		],
+		"columnDefs": [
+		{
+			"targets": [3], 
+			"orderable": true,
+			"render": function ( data, type, row, meta ) {
+				var currentClass = (data == 1)? "primary" : "default";
+				var statusText = (data == 1)? "Active" : "Pending";
+				return  '<span class="badge badge-'+currentClass+'">'+statusText+'</span>';
+			}
+		},
+		{
+			"targets": [4], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  moment(data).format('YYYY-MM-DD');
+			}
+		},
+		{
+			"targets": [5], 
+			"orderable": false,
+			"render": function ( data, type, row, meta ) {
+				return  '<a href="'+AppHelper.baseUrl+'admin/update_hotel/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
+						 '<a href="'+AppHelper.baseUrl+'admin/hotel_rooms/'+data+'" class="btn btn-xs btn-default mr-5">Rooms</a>'+
+						'<button type="button" class="btn btn-outline btn-xs btn-primary" id="hotel_delete" data-id="'+data+'">Delete</button>';
+			}
+		}]
+		
+	});
+
+	$('#applyHotelfilter').click(function(){ 
+		$('#HotelListTable').DataTable().ajax.reload(); 
+	});
+
+	$('#clearHotelfilter').click(function(){ 
+		$('#location_id').val("");
+		$('#HotelListTable').DataTable().ajax.reload(); 
+	});
+
+	$('#HotelListTable').delegate('#hotel_delete', 'click', function(){
+		var hotel_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this hotel and related rooms?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_hotel',
+					data: {hotel_id : hotel_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							 $('#HotelListTable').DataTable().ajax.reload(); 
+						 }else{
+							lnv.alert({
+								title: 'Error',
+								content: 'Somethig went wrong, please try again later.'
+							}); 
+						 }
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+}
+
+if($("#singleDatePicker").length > 0){
+	$("#singleDatePicker").daterangepicker({
+		singleDatePicker: true,
+		minDate: moment().startOf('month').format('YYYY-MM-DD'),
+        maxDate  : moment().endOf('month').format('YYYY-MM-DD'),
+		locale: {
+			format: 'YYYY-MM-DD'
+		}
+	});
+}
+
+if($("#daterange").length > 0){
+	$('input[name="daterange"]').daterangepicker({
+		autoUpdateInput: false,
+		locale: {
+			cancelLabel: 'Clear'
+		}
+	});
+	$('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+		$(this).val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+	});
+  
+	$('input[name="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+		$(this).val('');
+	});
+  
+}
+
+
+if($("#DatatableHolderAgentOrders").length > 0){
+	$('#DatatableHolderAgentOrders').DataTable({
+		"dom": "lfr<'#total_price'>tip",
+		"initComplete": function(settings, json) {
+			$("#total_price").text("");
+		},
+		"isMobile": window.outerWidth < 800 ? true : false,
+        "responsive": window.outerWidth < 800 ? true : false, 
+		"pageLength": 10,
+		"processing": true, 
+		"serverSide": true,
+		'ajax': {
+			'type': 'POST',
+			'url': AppHelper.baseUrl +'agent/populate_DT_agent_order_list',
+			"data": function (data) {
+				data.brand_id = $('#brand_id').val();
+				data.status = $('#status').val();
+				data.daterange = $('#daterange').val();
+			}
+		},
+		'columns':[
+			{ 'data': 'order_reference'},
+			{ 'data': 'brand_id.brand_name'},
+			{ "data": "order_amount"},
+			{ "data": "order_status"},
+			{ 'data': 'order_create_date'},
+			{ 'data': '_id'},
+		],
+		"columnDefs": [
+		{
+			"targets": [1], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  data[0].toUpperCase() +  data.slice(1);
+			}
+		},
+		{
+			"targets": [3], 
+			"orderable": true,
+			"render": function ( data, type, row, meta ) {
+				return  '<span class="badge badge-default">'+data+'</span>';
+			}
+		},
+		{
+			"targets": [4], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  moment(data).format('YYYY-MM-DD');
+			}
+		},
+		{
+			"targets": [5], 
+			"orderable": false,
+			"render": function ( data, type, row, meta ) {
+				var delete_request_status =  (row.order_delete_request != true)? " " : "disabled";
+				return  '<a href="'+AppHelper.baseUrl+'agent/update_order/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
+						'<a href="'+AppHelper.baseUrl+'agent/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>'+
+						'<a href="'+AppHelper.baseUrl+'agent/print_order/'+data+'" target="_blank" class="btn btn-xs btn-primary mr-5">Print</a>'+
+						'<button type="button" class="btn btn-outline btn-xs btn-primary '+delete_request_status+'" id="delete_order" data-id="'+data+'">Delete</button>';
+			}
+		}],
+		"footerCallback": function (tfoot, data, start, end, display) {
+			var api = this.api(), data;
+
+			var intVal = function ( i ) {
+				return typeof i === 'string' ?
+					i.replace(/[\$,]/g, '')*1 :
+					typeof i === 'number' ?
+						i : 0;
+			};
+ 
+			var total = api.column(2).data().reduce( function (a, b) {
+					return intVal(a) + intVal(b);
+				}, 0 );
+
+			$('#total_price').text(total);  
+		},
+		
+	});
+
+	$('#applyAgentOrderListfilter').click(function(){ 
+		$('#DatatableHolderAgentOrders').DataTable().ajax.reload(); 
+	});
+
+	$('#clearAgentOrderListfilter').click(function(){ 
+		$('#brand_id').val("");
+		$('#status').val("");
+		$('#daterange').val("");
+		$('#DatatableHolderAgentOrders').DataTable().ajax.reload(); 
+	});
+
+	$('#DatatableHolderAgentOrders').delegate('#delete_order', 'click', function(){
+		var order_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this order?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'agent/delete_order',
+					data: {order_id : order_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							lnv.alert({
+								title: 'Success',
+								content: 'Your delete request has been sent successfully. The order will be removed after revision of administration.'
+							}); 
+							 $('#DatatableHolderAgentOrders').DataTable().ajax.reload(); 
+						 }else{
+							lnv.alert({
+								title: 'Error',
+								content: 'Somethig went wrong, please try again later.'
+							}); 
+						 }
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+}
+
+
+if($("#DatatableHolderAdminOrders").length > 0){
+	$('#DatatableHolderAdminOrders').DataTable({
+		"isMobile": window.outerWidth < 800 ? true : false,
+        "responsive": window.outerWidth < 800 ? true : false, 
+		"pageLength": 10,
+		"processing": true, 
+		"serverSide": true,
+		'ajax': {
+			'type': 'POST',
+			'url': AppHelper.baseUrl +'admin/populate_DT_order_list',
+			"data": function (data) {
+				data.brand_id = $('#brand_id').val();
+				data.status = $('#status').val();
+				data.agent_id = $('#agent_id').val();
+				data.daterange = $('#daterange').val();
+			}
+		},
+		'columns':[
+			{ 'data': 'order_reference'},
+			{ 'data': 'user_id.first_name'},
+			{ 'data': 'brand_id.brand_name'},
+			{ "data": "order_status",},
+			{ 'data': 'order_create_date'},
+			{ 'data': '_id'},
+		],
+		"columnDefs": [
+		{
+			"targets": [1], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  data[0].toUpperCase() +  data.slice(1);
+			}
+		},
+		{
+			"targets": [3], 
+			"orderable": true,
+			"render": function ( data, type, row, meta ) {
+				return  '<span class="badge badge-default">'+data+'</span>';
+			}
+		},
+		{
+			"targets": [4], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  moment(data).format('YYYY-MM-DD');
+			}
+		},
+		{
+			"targets": [5], 
+			"orderable": false,
+			"render": function ( data, type, row, meta ) {
+				var delete_request_status =  (row.order_delete_request != true)? "request_status_none" : "request_status_active";
+				return  '<a href="'+AppHelper.baseUrl+'admin/update_order/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
+						 '<a href="'+AppHelper.baseUrl+'admin/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>'+
+						'<button type="button" class="btn btn-outline btn-xs btn-primary" id="delete_order" data-id="'+data+'">Delete  <span class="'+delete_request_status+'"></span></button>';
+			}
+		}]
+		
+	});
+
+	$('#applyAdminOrderListfilter').click(function(){ 
+		$('#DatatableHolderAdminOrders').DataTable().ajax.reload(); 
+	});
+
+	$('#clearAdminOrderListfilter').click(function(){ 
+		$('#brand_id').val("");
+		$('#status').val("");
+		$('#daterange').val("");
+		$('#agent_id').val("");
+		$('#DatatableHolderAdminOrders').DataTable().ajax.reload(); 
+	});
+
+	$('#DatatableHolderAdminOrders').delegate('#delete_order', 'click', function(){
+		var order_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this order?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'admin/delete_order',
+					data: {order_id : order_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							lnv.alert({
+								title: 'Success',
+								content: 'Order has been deleted successfully'
+							}); 
+							 $('#DatatableHolderAdminOrders').DataTable().ajax.reload(); 
+						 }else{
+							lnv.alert({
+								title: 'Error',
+								content: 'Somethig went wrong, please try again later.'
+							}); 
+						 }
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+}
+
+
+
+
+if($("#roomBlockSearch").length > 0){
+	$('#roomBlockSearch').click(function() {
+		var hotel_id = $("#hotel_id").val();
+		$.ajax({
+			type: 'POST',
+			url: AppHelper.baseUrl  +'admin/get_room_block_rooms',
+			data: {hotel_id : hotel_id},
+			dataType  : 'html',
+			success: function(response){
+				console.log(response);
+				$("#ajax-rooms").html(response);
+			}
+		}); 
+	});
+
+	$('#clearBlockSearch').click(function(){ 
+		$('#hotel_id').val("");
+		$('#daterange').val("");
+	});
+}
+
+if($('#announcement_type').length > 0){
+	$('#announcement_type').on('change', function() {
+	  if(this.value == "private"){
+		  $('#typeToggle').show();
+	  }else{
+		  $('#typeToggle').hide();
+	  }
+	});
+}
+
+});

@@ -1,0 +1,14 @@
+[
+    {
+        "plugin": {
+           "name" : "logger",
+           "status" : "activate"
+        }
+    },
+    {
+        "plugin": {
+            "name" : "pmoniter",
+            "status" : "deactivate"
+         }
+    }
+]

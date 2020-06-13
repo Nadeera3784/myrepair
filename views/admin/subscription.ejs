@@ -1,0 +1,76 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Subscription</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Subscription</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Subscription List</h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn  btn-primary btn-sm" href="<%=helper.base_url()%>admin/add_subscription">New</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <table class="table mb-0" id="DatatableHolder">
+                                <thead>
+                                  <tr>
+                                    <th>Title</th>
+                                    <th>Limit</th>
+                                    <th>Price(LKR)</th>
+                                    <th>manage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% subscriptions.forEach(function(subscription) { %>
+                                        <tr>
+                                            <td><%= helper.initial_capitalizer(subscription.subscription_title) %></td>
+                                            <td><%= subscription.subscription_limit %></td>
+                                            <td><%= subscription.subscription_price %></td>
+                                            <td>
+                                                <a class="btn btn-xs btn-primary mr-10" href="<%=helper.base_url()%>admin/update_subscription/<%= subscription._id %>">Update</a>
+                                                <button id="deleteSubscription" class="btn btn-xs btn-default" data-id="<%=subscription._id %>">Delete</button>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

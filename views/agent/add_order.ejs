@@ -1,0 +1,147 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Order</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Order</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Add A New Order</h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>agent/orders"> Back</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <form action="<%=helper.base_url()%>agent/add_action_order" method="post" id="instantValidator">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="brand_id">Brand:</label>
+                                            <select name="brand_id" id="brand_id" class="form-control required select2">
+                                                <option value="" selected="selected">--Select Phone Brand--</option>
+                                                <% brands.forEach(function(brand) { %>
+                                                    <option value="<%=brand._id %>"><%=helper.initial_capitalizer(brand.brand_name) %></option>
+                                                <% }); %>
+                                            </select>
+                                            <% if (typeof brand_id_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : brand_id_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="model">Model:</label>
+                                            <input type="text" class="form-control required" id="model" name="model"  autocomplete="off">
+                                            <% if (typeof model_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : model_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                               </div>
+                               <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="status">Status:</label>
+                                            <select name="status" id="status" class="form-control required select2">
+                                                <option value="" selected="selected">--Select Status--</option>
+                                                    <option value="processing">Processing</option>
+                                                    <option value="rejected">Rejected</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="repaired">Repaired</option>
+                                            </select>
+                                            <% if (typeof status_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : status_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="create_date">Date:</label>
+                                            <input type="text" class="form-control required" id="singleDatePicker" name="create_date"  autocomplete="off">
+                                            <% if (typeof create_date_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : create_date_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label mb-10 text-left">Fault: </label>
+                                    <textarea class="form-control required" rows="2" name="fault" id="fault"></textarea>
+                                    <% if (typeof fault_error != "undefined") { %>
+                                        <%- include('notification', {type: 'danger', message : fault_error.msg}); %>
+                                    <% } %>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="customer_name">Customer Name:</label>
+                                            <input type="text" class="form-control required" id="customer_name" name="customer_name"  autocomplete="off">
+                                            <% if (typeof customer_name_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : customer_name_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="customer_phone">Customer Phone:</label>
+                                            <input type="number" class="form-control required" id="customer_phone" name="customer_phone"  autocomplete="off">
+                                            <% if (typeof customer_phone_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : customer_phone_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="customer_email">Customer Email(Optional):</label>
+                                            <input type="email" class="form-control" id="customer_email" name="customer_email"  autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="customer_address">Customer Address(Optional):</label>
+                                            <input type="text" class="form-control" id="customer_address" name="customer_address"  autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <button type="submit" class="btn btn-primary"><span class="btn-text">Save</span></button>
+                                </div>	
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

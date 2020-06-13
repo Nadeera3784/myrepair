@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>App</title>
+    <meta name="description" content="App" />
+    <meta name="keywords" content="App" />
+    <meta name="author" content="App" />
+    <link href="<%=helper.base_url()%>assets/css/default.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <div class="wrapper  pa-0">
+        <header class="sp-header">
+            <div class="sp-logo-wrap pull-left">
+                <a href="index.html">
+                    <img class="brand-img mr-10" src="<%=helper.base_url()%>assets/images/logo.png" alt="brand" />
+                    <span class="brand-text"><img src="<%=helper.base_url()%>assets/images/brand.png" alt="brand" /></span>
+                </a>
+            </div>
+            <div class="form-group mb-0 pull-right">
+                <span class="inline-block pr-10">Don't have an account?</span>
+                <a class="inline-block btn btn-primary btn-rounded " href="signup.html">Sign Up</a>
+            </div>
+            <div class="clearfix"></div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="page-wrapper pa-0 ma-0 auth-page">
+            <div class="container">
+                <!-- Row -->
+                <div class="table-struct full-width full-height">
+                    <div class="table-cell vertical-align-middle auth-form-wrap">
+                        <div class="auth-form  ml-auto mr-auto no-float card-view pt-30 pb-30">
+                            <div class="row">
+                                <div class="col-sm-12 col-xs-12">
+                                    <div class="mb-30">
+                                        <h3 class="text-center txt-dark mb-10">Sign in to Hotelio</h3>
+                                        <h6 class="text-center nonecase-font txt-grey">Enter your details below</h6>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <form method="POST" action="<%=helper.base_url()%>auth/login/login_action">
+
+                                            <% if (typeof messages.danger != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                                            <% } %>
+                                            <div class="form-group">
+                                                <label class="control-label mb-10" for="email">Email address</label>
+                                                <input type="email" class="form-control" name="email"  id="email" placeholder="Enter email">
+                                                <% if (typeof email_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : email_error.msg}); %>
+                                                <% } %>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="pull-left control-label mb-10" for="password">Password</label>
+                                                <a class="capitalize-font txt-orange block mb-10 pull-right font-12"
+                                                    href="forgot-password.html">forgot password ?</a>
+                                                <div class="clearfix"></div>
+
+                                                <input type="password" name="password" class="form-control" id="password" placeholder="Enter password">
+                                                <% if (typeof password_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : password_error.msg}); %>
+                                                <% } %>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="checkbox checkbox-primary pr-10 pull-left">
+                                                    <input id="remember" name="remember" type="checkbox">
+                                                    <label for="remember"> Keep me logged in</label>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="form-group text-center">
+                                                <button type="submit" id="submit" class="btn btn-primary btn-rounded btn-block">sign
+                                                    in</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Row -->
+            </div>
+
+        </div>
+        <!-- /Main Content -->
+
+    </div>
+
+    <script src="<%=helper.base_url()%>assets/js/jquery.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/bootstrap.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/jquery.slimscroll.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/plugins.js"></script>
+</body>
+
+</html>

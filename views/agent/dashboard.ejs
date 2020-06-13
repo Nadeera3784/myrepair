@@ -1,0 +1,46 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Dashboard</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="#"><span>speciality pages</span></a></li>
+                    <li class="active"><span>blank page</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+
+              <% if (typeof user_private_announcements != "undefined") { %>
+                <% user_private_announcements.forEach(function(ups) { %>
+                    <div class="col-md-12">
+                        <div class="alert alert-success" role="alert">
+                            <strong><%=ups.announcement_title%></strong>
+                            <%=ups.announcement_description%>
+                        </div>
+                    </div>
+                <% }); %>
+              <% } %>
+
+        </div>
+    
+  
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

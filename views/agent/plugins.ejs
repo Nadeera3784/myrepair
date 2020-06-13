@@ -1,0 +1,71 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Plugins</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Plugins</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Plugin Cloud</h6>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="row">
+                                <% plugin_list.forEach(function(plugin) {%> 
+                                    <div class="col-md-3 mb-10 animated fadeIn">
+                                        <div class="infobox-1">
+                                            <div class="info-icon text-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-box"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                            </div>
+                                            <h5 class="info-heading"><%=plugin.plugin.name%></h5>
+                                            <p class="info-text">Lorem ipsum dolor sit amet, labore et dolore magna aliqua.</p>
+                                            <% if(plugin.plugin.status.toString() == "activate"){ %> 
+                                                <button type="button" class="btn btn-xs btn-default">Delete</button>
+                                                <button type="button" class="btn btn-xs btn-primary pull-right">Deactivate</button>
+                                            <% }else if(plugin.plugin.status.toString() == "deactivate"){ %> 
+                                                <button type="button" class="btn btn-xs btn-default">Delete</button>
+                                                <button type="button" class="btn btn-xs btn-primary pull-right">Activate</button>
+                                            <% }else{ %> 
+                                                <button type="button" class="btn btn-xs btn-primary btn-block">Install</button>
+                                            <% } %> 
+                                        </div>
+                                    </div>
+                                <% }); %> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

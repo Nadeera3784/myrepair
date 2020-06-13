@@ -1,0 +1,19 @@
+
+</div>
+    <script src="<%=helper.base_url()%>assets/js/jquery.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/bootstrap.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/jquery.slimscroll.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/dropdown-bootstrap-extended.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/plugins.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/moment.js"></script>
+    <script type="text/javascript">
+       AppHelper = {};
+       AppHelper.baseUrl = '<%=helper.base_url()%>';
+     </script>
+    <% if (typeof js != "undefined") { %>
+      <% for (var i = 0; i < js.length; i++) { %>
+    <script src="<%=helper.base_url()%><%=js[i]%>"></script>
+      <% } %>
+   	<% } %>
+</body>
+</html>

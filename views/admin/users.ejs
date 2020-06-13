@@ -1,0 +1,84 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Users</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Users</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">User List </h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-primary btn-sm" href="<%=helper.base_url()%>admin/add_user">New</a>
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>admin/announcements">Announcements</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <table class="table mb-0" id="DatatableHolder">
+                                <thead>
+                                  <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Subscription</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Manage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    <% users.forEach(function(user) { %>
+                                        <tr>
+                                            <td><%=helper.initial_capitalizer(user.first_name) + " " + helper.initial_capitalizer(user.last_name)%></td>
+                                            <td><%=user.email%></td>
+                                            <td><%=helper.initial_capitalizer(user.subscription_id.subscription_title)%></td>
+                                            <td><%=helper.initial_capitalizer(user.role)%></td>
+                                            <td><span class="badge badge-<%=(user.isActive == "1")? "primary" : "default";%>"><%=(user.isActive == "1")? "Active" : "Deactivate";%></span></td>
+                                            <td><%=helper.date_format(user.createdAt, "YYYY-MM-DD")%></td>
+                                            <td>
+                                                <a href="<%=helper.base_url()%>admin/update_user/<%=user._id%>" class="btn btn-xs btn-primary mr-5">Edit</a>
+                                                <button id="deleteUser" class="btn btn-xs btn-default" data-id="<%=user._id %>">Delete</button>
+                                                <a href="<%=helper.base_url()%>admin/force_password_change/<%=user._id%>" class="btn btn-xs btn-outline btn-primary mr-5">Chnage password</a>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                              </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>
