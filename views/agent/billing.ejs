@@ -1,0 +1,83 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Billing</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Billing</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Billing List</h6>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="collapse" data-target="#AgentBillingListfilterElement" aria-expanded="false" aria-controls="AgentBillingListfilterElement">Filter</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="form-inline mb-30 collapse"  id="AgentBillingListfilterElement">
+                               <div class="form-group mr-15">
+                                <select name="status" id="status" class="form-control">
+                                    <option value="" selected="selected">--Select Status--</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="paid">Paid</option>
+                                    <option value="due">Due</option>
+                                </select>
+                             </div>
+                             <div class="form-group mr-15">
+                                <input type="text" class="form-control required" id="daterange" name="daterange"  autocomplete="off" placeholder="Select date range">
+                             </div>
+                            <div class="form-group">
+                                    <button type="button" name="applyAgentBillingListfilter" id="applyAgentBillingListfilter" class="btn btn-primary">Apply</button>
+                                    <button type="button" name="clearAgentBillingListfilter" id="clearAgentBillingListfilter" class="btn btn-default">Clear</button>
+                            </div>
+                           </div>  
+                            <table class="table mb-0" id="DatatableHolderAgentBilling">
+                                <thead>
+                                  <tr>
+                                    <th>Reference ID</th>
+                                    <th>Amount(LKR)</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Manage</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

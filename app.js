@@ -9,7 +9,7 @@ const flash      = require('express-flash');
 const helmet     = require('helmet');
 const cors       = require('cors');
 const fs         = require('fs');
-const xssFilter  = require('x-xss-protection');
+const CronJob    = require('cron').CronJob;
 const htmlEscape = require('secure-filters').html;
 require('express-async-errors');
 
@@ -18,6 +18,7 @@ const config_app       = require('./config/app.js');
 const MongodbHelper    = require('./helpers/mongodb.js');
 const LanguageHelper   = require('./helpers/language.js');
 const moment           = require('./libraries/moment.js');
+const {bill_payment_create}  = require('./libraries/scheduler.js');
 const {get_all_plugins} = require('./plugins/Plugin_interface.js');
 
 const {app_route, user_route, admin_route, agent_route, auth_route}    = require('./routes');
@@ -30,7 +31,6 @@ let app_root = '/';
 
 app.use(helmet());
 
-//app.use(xssFilter());
 
 if(config_app.app.environment == "development"){
 app.use(logger('dev'));
@@ -119,6 +119,13 @@ app.use((request, response, next) => {
     next();
 });
 
+
+// const job = new CronJob('1 * * * * *', function() {
+// 	console.log('You will see this message every 1 second');
+// 	bill_payment_create();
+// }, null, true, 'Asia/Colombo');
+//job.start();
+
 get_all_plugins().then(function(plugin_list) {
 	plugin_list.forEach(function(pluginName){
 		var plugin = require('./plugins/'+pluginName.plugin.name);
@@ -134,8 +141,6 @@ get_all_plugins().then(function(plugin_list) {
 
 		
 
-
-// 
 app.use('/', app_route);
 app.use('/', auth_route);
 app.use('/', admin_route);
@@ -148,6 +153,8 @@ app.disable('x-powered-by');
 //     err.status = 404;
 //     next(err);
 // });
+
+
 
 app.set('port', process.env.PORT || 3030);
 

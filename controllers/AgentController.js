@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const moment = require('../libraries/moment.js');
 
-const {User_Model, Announcements_Model, Brands_Model, Orders_Model, Subscription_Model} = require('../models');
+const {User_Model, Announcements_Model, Brands_Model, Orders_Model, Subscription_Model, Bill_Model} = require('../models');
 const config_app        = require('../config/app.js');
 const {get_all_plugins} = require('../plugins/Plugin_interface.js');
 const RandomizerHelper  = require('../helpers/randomizer.js');
@@ -437,6 +437,94 @@ const AgentController = {
 				response.status(200);
 				request.flash('info', 'Password has been changed successfuly');
 				response.redirect(request.helper.base_url() +'agent/settings');
+			});
+		}
+
+	},
+	async billing(request, response, next){
+		const stylesheets = [
+			"assets/css/jquery.dataTables.min.css",
+			"assets/css/responsive.dataTables.min.css",
+			'assets/css/daterangepicker.css',
+			"assets/css/dialog.css",
+		];
+		const javascript = [
+			"assets/js/jquery.dataTables.min.js",
+			"assets/js/responsive.dataTables.min.js",
+			"assets/js/dataTables.bootstrap.min.js",
+			"assets/js/moment.js",
+			"assets/js/daterangepicker.js",
+			"assets/js/dialog.js",
+			"assets/js/app.js",
+		];
+		response.status(200);
+		response.render("agent/billing", {
+			helper: request.helper,
+			js : javascript,
+			css : stylesheets
+		});
+	},
+	async update_bill(request, response, next){
+		const bill_id = request.params.bill_id;
+		await Bill_Model.findById(bill_id, function (error, _bill) {
+			if (error) return response.redirect(request.helper.base_url() +'agent/billing');
+			const bill = _bill;
+			const stylesheets = [
+				"assets/css/daterangepicker.css",
+			];
+			const javascript = [
+				"assets/js/validator.js",
+				"assets/js/moment.js",
+				"assets/js/daterangepicker.js",
+				"assets/js/app.js"
+			];
+			response.status(200);
+			response.render("agent/update_bill", {
+				helper: request.helper,
+				js : javascript,
+				css : stylesheets,
+				bill : bill
+			});
+		});
+	},
+	async save_bill(request, response, next){
+		const {payment_method, transaction_id, update_date, bill_id} = request.body;
+		const errors = validationResult(request);
+		if (!errors.isEmpty()) {
+			const bill = await Bill_Model.findById(mongoose.Types.ObjectId(bill_id));
+			
+			const stylesheets = [
+				"assets/css/daterangepicker.css",
+			];
+			const javascript = [
+				"assets/js/validator.js",
+				"assets/js/moment.js",
+				"assets/js/daterangepicker.js",
+				"assets/js/app.js"
+			];
+			response.status(200);
+			response.render("agent/update_bill", {
+				helper: request.helper,
+				js : javascript,
+				css : stylesheets,
+				payment_method_error  :   errors.mapped().payment_method,
+				transaction_id_error  :   errors.mapped().transaction_id,
+				update_date_error     :   errors.mapped().update_date,
+				bill : bill
+			});
+		}else{
+			var formatted_end_date =  new Date(update_date);
+
+			await Bill_Model.findByIdAndUpdate(bill_id, {
+				bill_payment_method   : request.helper.htmlEscaper(payment_method),
+				bill_transaction_id   : transaction_id,
+				bill_update_date      : formatted_end_date,
+				bill_status           : "processing",
+			}, {new: true, useFindAndModify: false}, function(err, res){
+				if (err) return next(err);
+				response.status(200);
+				request.flash('info', 'Bill has been updated successfuly');
+				response.redirect(request.helper.base_url() +'agent/billing');
 			});
 		}
 

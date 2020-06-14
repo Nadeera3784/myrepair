@@ -149,99 +149,6 @@ if($("#instantValidator").length > 0){
 	$("#instantValidator").validate();
 }
 
-if($("#HotelListTable").length > 0){
-	$('#HotelListTable').DataTable({
-		"isMobile": window.outerWidth < 800 ? true : false,
-        "responsive": window.outerWidth < 800 ? true : false, 
-		"pageLength": 10,
-		"processing": true, 
-		"serverSide": true,
-		'ajax': {
-			'type': 'POST',
-			'url': AppHelper.baseUrl +'admin/populate_DT_hotel_list',
-			"data": function (data) {
-				data.location_id = $('#location_id').val();
-			}
-		},
-		'columns':[
-			{ 'data': 'hotel_title'},
-			{ 'data': 'hotel_owner.first_name'},
-			{ 'data': 'hotel_location.locaton_name'},
-			{ 'data': 'isActive'},
-			{ 'data': 'createdAt'},
-			{ 'data': '_id'},
-		],
-		"columnDefs": [
-		{
-			"targets": [3], 
-			"orderable": true,
-			"render": function ( data, type, row, meta ) {
-				var currentClass = (data == 1)? "primary" : "default";
-				var statusText = (data == 1)? "Active" : "Pending";
-				return  '<span class="badge badge-'+currentClass+'">'+statusText+'</span>';
-			}
-		},
-		{
-			"targets": [4], 
-			"orderable": true,
-			"render": function (data, type, row, meta ) {
-				return  moment(data).format('YYYY-MM-DD');
-			}
-		},
-		{
-			"targets": [5], 
-			"orderable": false,
-			"render": function ( data, type, row, meta ) {
-				return  '<a href="'+AppHelper.baseUrl+'admin/update_hotel/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
-						 '<a href="'+AppHelper.baseUrl+'admin/hotel_rooms/'+data+'" class="btn btn-xs btn-default mr-5">Rooms</a>'+
-						'<button type="button" class="btn btn-outline btn-xs btn-primary" id="hotel_delete" data-id="'+data+'">Delete</button>';
-			}
-		}]
-		
-	});
-
-	$('#applyHotelfilter').click(function(){ 
-		$('#HotelListTable').DataTable().ajax.reload(); 
-	});
-
-	$('#clearHotelfilter').click(function(){ 
-		$('#location_id').val("");
-		$('#HotelListTable').DataTable().ajax.reload(); 
-	});
-
-	$('#HotelListTable').delegate('#hotel_delete', 'click', function(){
-		var hotel_id = $(this).attr('data-id');  
-		lnv.confirm({
-			title: 'Confirm',
-			content: 'Are you sure you want to delete this hotel and related rooms?',
-			confirmBtnText: 'Yes',
-			confirmHandler: function(){
-				$.ajax({
-					type: 'POST',
-					url: AppHelper.baseUrl  +'admin/delete_hotel',
-					data: {hotel_id : hotel_id},
-					dataType  : 'json',
-					success: function(response){
-						if(response.type == "success"){
-							 $('#HotelListTable').DataTable().ajax.reload(); 
-						 }else{
-							lnv.alert({
-								title: 'Error',
-								content: 'Somethig went wrong, please try again later.'
-							}); 
-						 }
-					}
-				}); 				
-			},
-			cancelBtnText: 'No',
-			cancelHandler: function(){
-		
-			}
-		})	
-	});
-
-}
-
 if($("#singleDatePicker").length > 0){
 	$("#singleDatePicker").daterangepicker({
 		singleDatePicker: true,
@@ -399,7 +306,6 @@ if($("#DatatableHolderAgentOrders").length > 0){
 
 }
 
-
 if($("#DatatableHolderAdminOrders").length > 0){
 	$('#DatatableHolderAdminOrders').DataTable({
 		"isMobile": window.outerWidth < 800 ? true : false,
@@ -509,7 +415,125 @@ if($("#DatatableHolderAdminOrders").length > 0){
 
 }
 
+if($("#DatatableHolderAgentBilling").length > 0){
+	$('#DatatableHolderAgentBilling').DataTable({
+		"isMobile": window.outerWidth < 800 ? true : false,
+        "responsive": window.outerWidth < 800 ? true : false, 
+		"pageLength": 10,
+		"processing": true, 
+		"serverSide": true,
+		'ajax': {
+			'type': 'POST',
+			'url': AppHelper.baseUrl +'agent/populate_DT_agent_billing_list',
+			"data": function (data) {
+				data.payment_method = $('#payment_method').val();
+				data.status = $('#status').val();
+				data.daterange = $('#daterange').val();
+			}
+		},
+		'columns':[
+			{ 'data': 'bill_reference'},
+			{ 'data': 'bill_amount'},
+			{ "data": "bill_status"},
+			{ 'data': 'bill_create_date'},
+			{ 'data': '_id'},
+		],
+		"columnDefs": [
+		{
+			"targets": [1], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  data[0].toUpperCase() +  data.slice(1);
+			}
+		},
+		{
+			"targets": [2], 
+			"orderable": true,
+			"render": function ( data, type, row, meta ) {
+				return  '<span class="badge badge-default">'+data+'</span>';
+			}
+		},
+		{
+			"targets": [3], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  moment(data).format('YYYY-MM-DD');
+			}
+		},
+		{
+			"targets": [4], 
+			"orderable": false,
+			"render": function ( data, type, row, meta ) {
+				return  '<a href="'+AppHelper.baseUrl+'agent/update_bill/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
+						'<a href="'+AppHelper.baseUrl+'agent/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>';
+			}
+		}],
+		// "footerCallback": function (tfoot, data, start, end, display) {
+		// 	var api = this.api(), data;
 
+		// 	var intVal = function ( i ) {
+		// 		return typeof i === 'string' ?
+		// 			i.replace(/[\$,]/g, '')*1 :
+		// 			typeof i === 'number' ?
+		// 				i : 0;
+		// 	};
+ 
+		// 	var total = api.column(2).data().reduce( function (a, b) {
+		// 			return intVal(a) + intVal(b);
+		// 		}, 0 );
+
+		// 	$('#total_price').text(total);  
+		// },
+		
+	});
+
+	$('#applyAgentBillingListfilter').click(function(){ 
+		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+	});
+
+	$('#clearAgentBillingListfilter').click(function(){ 
+		$('#payment_method').val("");
+		$('#status').val("");
+		$('#daterange').val("");
+		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+	});
+
+	$('#DatatableHolderAgentBilling').delegate('#delete_order', 'click', function(){
+		var order_id = $(this).attr('data-id');  
+		lnv.confirm({
+			title: 'Confirm',
+			content: 'Are you sure you want to delete this order?',
+			confirmBtnText: 'Yes',
+			confirmHandler: function(){
+				$.ajax({
+					type: 'POST',
+					url: AppHelper.baseUrl  +'agent/delete_order',
+					data: {order_id : order_id},
+					dataType  : 'json',
+					success: function(response){
+						if(response.type == "success"){
+							lnv.alert({
+								title: 'Success',
+								content: 'Your delete request has been sent successfully. The order will be removed after revision of administration.'
+							}); 
+							 $('#DatatableHolderAgentOrders').DataTable().ajax.reload(); 
+						 }else{
+							lnv.alert({
+								title: 'Error',
+								content: 'Somethig went wrong, please try again later.'
+							}); 
+						 }
+					}
+				}); 				
+			},
+			cancelBtnText: 'No',
+			cancelHandler: function(){
+		
+			}
+		})	
+	});
+
+}
 
 
 if($("#roomBlockSearch").length > 0){

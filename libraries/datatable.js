@@ -1,4 +1,4 @@
-const {Orders_Model} = require('../models');
+const {Orders_Model, Bill_Model} = require('../models');
 const moment = require('../libraries/moment.js');
 const mongoose = require('mongoose');
 const debug = require('eyes').inspector({styles: {all: 'cyan'}});
@@ -193,6 +193,97 @@ const DT_admin_order_list = function (request, response, next) {
     
 }
 
+const DT_agent_billing_list = function (request, response, next) {
+    var params = request.body;
+    var order = params.order || [];
+    var columns = params.columns || [];
+    var daterange = params.daterange || "";
+    var status = params.status || "";
+    var where_clause = {};
+    
+    var searchStr = params.search.value;
+
+    if(params.search.value){
+            var regex = new RegExp(params.search.value, "i")
+            searchStr = {
+                $or: [
+                    {'bill_reference': regex},
+                    {'bill_transaction_id': regex},
+                ],
+                "user_id" : mongoose.Types.ObjectId(request.session.userId) 
+
+            };
+    }else if(daterange){
+        var date_array = daterange.split("-");
+        var start_date =  request.helper.date_format(new Date(date_array[0]), "YYYY-MM-DD");
+        var end_date   =  request.helper.date_format(new Date(date_array[1]), "YYYY-MM-DD");
+        var formatted_start_date =  moment.utc(start_date).format();
+        var formatted_end_date =  moment.utc(end_date).format();
+        searchStr = { 
+            'bill_create_date': { $gt: formatted_start_date, $lt: formatted_end_date}, 
+            "user_id" : mongoose.Types.ObjectId(request.session.userId)
+        };
+    }else{
+         searchStr = {
+            "user_id" : mongoose.Types.ObjectId(request.session.userId) 
+         };
+    }
+
+    
+    if (order && columns) {
+        const sortByOrder = order.reduce((memo, ordr) => {
+          const column = columns[ordr.column];
+          memo[column.data] = ordr.dir === 'asc' ? 1 :  -1;
+          return memo;
+        }, {});
+  
+        if (Object.keys(sortByOrder).length) {
+          sort = sortByOrder;
+        }
+    }
+
+
+
+    if(status){
+        where_clause.bill_status = status;
+    }
+
+
+    var recordsTotal = 0;
+    var recordsFiltered = 0;
+
+    Bill_Model.countDocuments({"user_id" : mongoose.Types.ObjectId(request.session.userId)}, function(err, all_count){
+        recordsTotal = all_count;
+        Bill_Model.countDocuments(searchStr, function(err, filterd_count) {
+            recordsFiltered = filterd_count;
+            Bill_Model.find(searchStr, 'bill_reference  bill_transaction_id')
+            .select("_id bill_reference bill_amount bill_status bill_create_date")
+            .where(where_clause)
+            .skip(Number(params.start))
+            .limit(Number(params.length))
+            .sort(sort)
+            .exec(function(err, results) {
+                if (err) {
+                    response.status(400).json({
+                        message : err
+                    });
+                    return;
+                }
+                var data = JSON.stringify({
+                    "draw": params.draw,
+                    "recordsFiltered": recordsFiltered,
+                    "recordsTotal": recordsTotal,
+                    "data": results
+                });
+                response.send(data);
+            });
+
+        });
+
+    });
+
+}
+
 const DT_room_list = function(request, response, next) {
     var params = request.body;
     var order = params.order || [];
@@ -266,9 +357,8 @@ const DT_room_list = function(request, response, next) {
     
 }
 
-
-
 module.exports = {
     DT_agent_order_list,
+    DT_agent_billing_list,
     DT_admin_order_list
 };

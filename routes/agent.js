@@ -6,7 +6,7 @@ const multer  = require('multer');
 
 const { is_authenticated, access_level_verifier} = require('../libraries/access.js');
 const { AgentController } = require('../controllers');
-const {DT_agent_order_list} = require('../libraries/datatable.js');
+const {DT_agent_order_list, DT_agent_billing_list} = require('../libraries/datatable.js');
 const {User_Model, Orders_Model} = require('../models');
 const moment  = require('../libraries/moment.js');
 
@@ -91,6 +91,21 @@ router.post('/agent/save_password',
 function (request, response, next){
     AgentController.save_password(request, response, next);
 });
+
+
+router.post('/agent/populate_DT_agent_billing_list', DT_agent_billing_list);
+
+router.get('/agent/billing', AgentController.billing);
+
+router.get('/agent/update_bill/:bill_id', AgentController.update_bill);
+
+router.post('/agent/save_bill', 
+[
+	check('payment_method', "Payment method is required").not().isEmpty().trim().escape(),
+    check('transaction_id', 'transaction ID name is required').not().isEmpty().trim().escape(),
+    check('update_date', 'Date is required').not().isEmpty().trim()
+],
+AgentController.save_bill);
 
 router.get('/agent/week',  function (request, response, next){
     const mongoose = require('mongoose');
