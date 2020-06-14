@@ -2,7 +2,8 @@ const {validationResult } = require('express-validator');
 const debug = require('eyes').inspector({styles: {all: 'cyan'}});
 const path    = require('path');
 const fs      = require('fs');
-const slugify = require('slugify')
+const slugify = require('slugify');
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const moment = require('../libraries/moment.js');
 
@@ -418,11 +419,13 @@ const AgentController = {
 				confirm_password_error  :   errors.mapped().confirm_password
 			});
 		}else{
+			const salt = bcrypt.genSaltSync();
+			const hash = bcrypt.hashSync(password, salt);
 			await User_Model.findOneAndUpdate({
 				"_id": mongoose.Types.ObjectId(id),
 			    },{ 
 					$set: { 
-						password: password
+						password: hash
 					} 
 				},{
 				new: true,

@@ -3,6 +3,7 @@ const debug = require('eyes').inspector({styles: {all: 'cyan'}});
 const path    = require('path');
 const fs      = require('fs');
 const slugify = require('slugify')
+const bcrypt = require('bcryptjs');
 
 const {User_Model, Subscription_Model, Brands_Model, Announcements_Model, Orders_Model} = require('../models');
 const config_app       = require('../config/app.js');
@@ -191,8 +192,10 @@ const AdminController = {
 				confirm_password_error  :   errors.mapped().confirm_password
 			});
 		}else{
+			const salt = bcrypt.genSaltSync();
+			const hash = bcrypt.hashSync(password, salt);
 			await User_Model.findByIdAndUpdate(id, {
-				password   : password, 
+				password   : hash, 
 			}, {new: true}, function(err, res){
 				if (err) return next(err);
 				response.status(200);
