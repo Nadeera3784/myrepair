@@ -6,7 +6,7 @@ const multer  = require('multer');
 const debug   = require('eyes').inspector({styles: {all: 'cyan'}});
 
 const { is_authenticated, access_level_verifier} = require('../libraries/access.js');
-const {DT_admin_order_list} = require('../libraries/datatable.js');
+const {DT_admin_order_list, DT_admin_billing_list} = require('../libraries/datatable.js');
 const { AdminController} = require('../controllers');
 const { User_Model} = require('../models');
 
@@ -200,6 +200,18 @@ router.post('/admin/save_order',
 AdminController.save_order);
 
 router.post('/admin/delete_order', AdminController.delete_order);
+
+router.post('/admin/populate_DT_admin_billing_list', DT_admin_billing_list);
+
+router.get('/admin/billing', AdminController.billing);
+
+router.post('/admin/delete_bill', AdminController.delete_bill);
+
+router.get('/admin/update_bill/:bill_id', AdminController.update_bill);
+
+router.get('/admin/details_bill/:bill_id', AdminController.details_bill);
+
+router.post('/admin/save_bill', AdminController.save_bill);
 
 module.exports = router;
 
