@@ -1,10 +1,6 @@
 module.exports = {
     database: {
-      hostname: "mongodb://localhost/",
-      username: "admin",
-      password : "password",
-      database: "repair",
-      dbprefix: "app_"
+      hostname: "mongodb://localhost:27017/repair",
     }
 };
   
