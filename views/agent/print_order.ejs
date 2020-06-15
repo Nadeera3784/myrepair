@@ -449,10 +449,10 @@
                         <table class="purchase" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
-                              <h3>{{invoice_id}}</h3>
+                              <h3><%-invoice.invoice_id;%></h3>
                             </td>
                             <td>
-                              <h3 class="align-right">{{date}}</h3>
+                              <h3 class="align-right"><%-invoice.invoice_date;%></h3>
                             </td>
                           </tr>
                           <tr>
@@ -466,18 +466,18 @@
                                     <p class="f-fallback">Amount</p>
                                   </th>
                                 </tr>
-                                {{#each invoice_details}}
+
                                 <tr>
-                                  <td width="80%" class="purchase_item"><span class="f-fallback">{{description}}</span></td>
-                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback">{{amount}}</span></td>
+                                  <td width="80%" class="purchase_item"><span class="f-fallback"><%-invoice.invoice_description;%></span></td>
+                                  <td class="align-right" width="20%" class="purchase_item"><span class="f-fallback"><%-invoice.invoice_amount;%></span></td>
                                 </tr>
-                                {{/each}}
+
                                 <tr>
                                   <td width="80%" class="purchase_footer" valign="middle">
                                     <p class="f-fallback purchase_total purchase_total--label">Total</p>
                                   </td>
                                   <td width="20%" class="purchase_footer" valign="middle">
-                                    <p class="f-fallback purchase_total">{{total}}</p>
+                                    <p class="f-fallback purchase_total"><%-invoice.invoice_amount;%></p>
                                   </td>
                                 </tr>
                               </table>

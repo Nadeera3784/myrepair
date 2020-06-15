@@ -818,6 +818,8 @@ const AdminController = {
 		await Bill_Model.findById(bill_id, function (error, _bill) {
 			if (error) return response.redirect(request.helper.base_url() +'admin/billing');
 			const bill = _bill;
+			const payment_method = ["bank_transfer", "ezcash", "mcash"];
+			const status = ["pending", "processing", "paid", "due"];
 			const stylesheets = [
 				"assets/css/daterangepicker.css",
 			];
@@ -832,7 +834,9 @@ const AdminController = {
 				helper: request.helper,
 				js : javascript,
 				css : stylesheets,
-				bill : bill
+				bill : bill,
+				payment_method : payment_method,
+				status : status
 			});
 		});
 	},
@@ -885,7 +889,7 @@ const AdminController = {
 				bill : bill
 			});
 		}else{
-			var formatted_end_date =  new Date(update_date);
+			var formatted_end_date =  update_date;
 
 			let QueryBuilder = {};
 			QueryBuilder.bill_update_date = formatted_end_date;

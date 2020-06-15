@@ -45,11 +45,10 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label mb-10" for="payment_method">Payment Method:</label>
-                                            <select name="payment_method" id="payment_method" class="form-control">
-                                                <option value="" selected>-Select Payment method-</option>
-                                                <option value="bank_transfer">Bank Transfer</option>
-                                                <option value="ezcash">eZcash</option>
-                                                <option value="mcash">mCash</option>
+                                            <select name="payment_method" id="payment_method" class="form-control required">
+                                                <% payment_method.forEach(function(pm) { %>
+                                                    <option <%-(typeof bill.bill_payment_method != undefined &&  bill.bill_payment_method == pm) ? "selected" : "";%> value="<%=pm%>"><%=helper.initial_capitalizer(pm) %></option>
+                                                <% }); %>
                                             </select>
                                             <% if (typeof payment_method_error != "undefined") { %>
                                                 <%- include('notification', {type: 'danger', message : payment_method_error.msg}); %>
@@ -59,12 +58,10 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label mb-10" for="status">Status:</label>
-                                            <select name="status" id="status" class="form-control">
-                                                <option value="" selected>-Select Bill Status-</option>
-                                                <option value="pending">Pending</option>
-                                                <option value="processing">Processing</option>
-                                                <option value="paid">Paid</option>
-                                                <option value="due">Due</option>
+                                            <select name="status" id="status" class="form-control required">
+                                                <% status.forEach(function(st) { %>
+                                                    <option <%-(bill.bill_status == st) ? "selected" : "";%> value="<%=st%>"><%=helper.initial_capitalizer(st) %></option>
+                                                <% }); %>
                                             </select>
                                             <% if (typeof status_error != "undefined") { %>
                                                 <%- include('notification', {type: 'danger', message : status_error.msg}); %>

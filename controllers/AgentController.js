@@ -325,9 +325,10 @@ const AgentController = {
 					amount: 2000
 				  }
 				],
-				subtotal: 8000,
-				paid: 0,
-				invoice_nr: 1234
+				invoice_description : order.order_fault,
+				invoice_amount : order.order_amount,
+				invoice_date: moment().format('DD-MMMM-YYYY'),
+				invoice_id : "#"+order.order_reference
 			  };
 	
 			generate_pdf(request, response, "views/agent/print_order.ejs", invoice, "stream");
