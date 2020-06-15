@@ -229,10 +229,6 @@ const AgentController = {
 				customer_phone_error :  errors.mapped().customer_phone
 			});
 		}else{
-			let QueryBuilder = {};
-			QueryBuilder.order_amount = amount;
-			QueryBuilder.order_status = status;
-
 			await Orders_Model.findByIdAndUpdate(order_id, {
 				order_amount : amount,
 				order_status : status,
