@@ -48,7 +48,7 @@ app.use(flash());
 app.use(cors());
 
 let store = new MongoStore({
-	uri: config_database.database.hostname + config_database.database.database,
+	uri: config_database.database.hostname,
 	collection: 'sessions'
 });
 
@@ -65,7 +65,7 @@ app.use(session({
 		
 }));
 
-new MongodbHelper.MongoHelpers().Initialize(config_database.database.hostname, config_database.database.database);
+new MongodbHelper.MongoHelpers().Initialize(config_database.database.hostname);
 
 app.set("view engine", "ejs");
 
