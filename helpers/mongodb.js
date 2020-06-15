@@ -7,8 +7,8 @@ let MongoHelpers = (function () {
 	function MongoHelpers() {
 	}
 
-	MongoHelpers.prototype.Initialize = function (dbhost, dbname) {
-		mongoose.connect(dbhost + dbname, {
+	MongoHelpers.prototype.Initialize = function (dbhost) {
+		mongoose.connect(dbhost, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			useFindAndModify: false
