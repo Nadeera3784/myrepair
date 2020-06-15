@@ -1,0 +1,107 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Billing</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Billing</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12 mt-10">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Update Billing - <%=bill.bill_reference%></h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>admin/billing"> Back</a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <form action="<%=helper.base_url()%>admin/save_bill" method="post" accept-charset="utf-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="payment_method">Payment Method:</label>
+                                            <select name="payment_method" id="payment_method" class="form-control">
+                                                <option value="" selected>-Select Payment method-</option>
+                                                <option value="bank_transfer">Bank Transfer</option>
+                                                <option value="ezcash">eZcash</option>
+                                                <option value="mcash">mCash</option>
+                                            </select>
+                                            <% if (typeof payment_method_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : payment_method_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="status">Status:</label>
+                                            <select name="status" id="status" class="form-control">
+                                                <option value="" selected>-Select Bill Status-</option>
+                                                <option value="pending">Pending</option>
+                                                <option value="processing">Processing</option>
+                                                <option value="paid">Paid</option>
+                                                <option value="due">Due</option>
+                                            </select>
+                                            <% if (typeof status_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : status_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="transaction_id">Transaction ID:</label>
+                                            <input type="text" class="form-control" id="transaction_id" name="transaction_id" value="<%=bill.bill_transaction_id%>"  autocomplete="off">
+                                            <% if (typeof transaction_id_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : transaction_id_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label mb-10" for="update_date">Update Date:</label>
+                                            <input type="text" class="form-control" id="singleDatePicker" name="update_date" value="<%=(bill.bill_update_date) ? helper.date_format(new Date(bill.bill_update_date), "YYYY-MM-DD") : "" %>" autocomplete="off">
+                                            <% if (typeof update_date_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : update_date_error.msg}); %>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                 </div>
+                                <div class="form-group mb-0">
+                                    <input type="hidden"  id="bill_id" name="bill_id" value="<%=bill._id%>">
+                                    <button type="submit" class="btn btn-primary"><span class="btn-text">Save</span></button>
+                                </div>	
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>

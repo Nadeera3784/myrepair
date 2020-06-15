@@ -1,0 +1,103 @@
+<%- include('header') %>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="row heading-bg">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Billing</h5>
+            </div>
+
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active"><span>Billing</span></li>
+                </ol>
+            </div>
+            <% if (typeof messages.info != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'success', message : messages.info}); %>
+                </div>
+              <% } %>
+    
+              <% if (typeof messages.danger != "undefined") { %>
+                <div class="col-md-12">
+                    <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                </div>
+              <% } %>
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view">
+                    <div class="panel-heading">
+                        <div class="clearfix">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">Billing Details -  <%=bill.bill_reference%></h6>
+                        </div>
+                        <div class="pull-right">
+                            <a class="btn btn-default btn-sm" href="<%=helper.base_url()%>admin/billing"> Back</a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <ul class="data-details-list">
+                                <li>
+                                    <div class="data-details-head">Agent</div>
+                                    <div class="data-details-des">
+                                        <%-helper.initial_capitalizer(bill.user_id.first_name)  + " " + helper.initial_capitalizer(bill.user_id.last_name) ;%>
+                                    </div>
+                                </li>
+                                <% if (typeof bill.bill_payment_method != "undefined") { %>
+                                <li>
+                                    <div class="data-details-head">Payment method</div>
+                                    <div class="data-details-des">
+                                        <%-bill.bill_payment_method;%>
+                                    </div>
+                                </li>
+                                <% } %>
+                                <% if (bill.bill_transaction_id != undefined) { %>
+                                <li>
+                                    <div class="data-details-head">Transaction ID</div>
+                                    <div class="data-details-des">
+                                        <%-bill.bill_transaction_id;%>
+                                    </div>
+                                </li>
+                                <% } %>
+                                <li>
+                                    <div class="data-details-head">Amount</div>
+                                    <div class="data-details-des">
+                                        <%-bill.bill_amount;%>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="data-details-head">Created</div>
+                                    <div class="data-details-des">
+                                        <%-helper.date_format(bill.bill_create_date, "YYYY-MM-DD");%>
+                                    </div>
+                                </li>
+                                <% if (bill.bill_update_date != undefined) { %>
+                                <li>
+                                    <div class="data-details-head">Updated</div>
+                                    <div class="data-details-des">
+                                        <%-helper.date_format(bill.bill_update_date, "YYYY-MM-DD");%>
+                                    </div>
+                                </li>
+                                <% } %>
+                                <li>
+                                    <div class="data-details-head">Status</div>
+                                    <div class="data-details-des">
+                                        <span class="badge badge-primary"><%-helper.initial_capitalizer(bill.bill_status);%></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('footer_navbar') %>
+    </div>
+</div>
+<%- include('footer') %>
