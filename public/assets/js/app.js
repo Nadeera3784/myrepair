@@ -144,7 +144,6 @@ if($(".select2").length > 0){
 	$('.select2').select2();
 }
 
-
 if($("#instantValidator").length > 0){
 	$("#instantValidator").validate();
 }
@@ -176,7 +175,6 @@ if($("#daterange").length > 0){
 	});
   
 }
-
 
 if($("#DatatableHolderAgentOrders").length > 0){
 	$('#DatatableHolderAgentOrders').DataTable({
@@ -467,6 +465,78 @@ if($("#DatatableHolderAgentBilling").length > 0){
 				return  '<a href="'+AppHelper.baseUrl+'agent/update_bill/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
 						'<a href="'+AppHelper.baseUrl+'agent/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>';
 			}
+		}]
+		
+	});
+
+	$('#applyAgentBillingListfilter').click(function(){ 
+		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+	});
+
+	$('#clearAgentBillingListfilter').click(function(){ 
+		$('#payment_method').val("");
+		$('#status').val("");
+		$('#daterange').val("");
+		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+	});
+
+}
+
+if($("#DatatableHolderAdminBilling").length > 0){
+	$('#DatatableHolderAdminBilling').DataTable({
+		"isMobile": window.outerWidth < 800 ? true : false,
+        "responsive": window.outerWidth < 800 ? true : false, 
+		"pageLength": 10,
+		"processing": true, 
+		"serverSide": true,
+		'ajax': {
+			'type': 'POST',
+			'url': AppHelper.baseUrl +'admin/populate_DT_admin_billing_list',
+			"data": function (data) {
+				data.user_id = $('#agent_id').val();
+				data.payment_method = $('#payment_method').val();
+				data.status = $('#status').val();
+				data.daterange = $('#daterange').val();
+			}
+		},
+		'columns':[
+			{ 'data': 'bill_reference'},
+			{ 'data': 'user_id.first_name'},
+			{ 'data': 'bill_amount'},
+			{ "data": "bill_status"},
+			{ 'data': 'bill_create_date'},
+			{ 'data': '_id'},
+		],
+		"columnDefs": [
+		{
+			"targets": [1], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  data + " " + row.user_id.last_name;
+			}
+		},
+		{
+			"targets": [3], 
+			"orderable": true,
+			"render": function ( data, type, row, meta ) {
+				return  '<span class="badge badge-default">'+data+'</span>';
+			}
+		},
+		{
+			"targets": [4], 
+			"orderable": true,
+			"render": function (data, type, row, meta ) {
+				return  moment(data).format('YYYY-MM-DD');
+			}
+		},
+		{
+			"targets": [5], 
+			"orderable": false,
+			"render": function ( data, type, row, meta ) {
+				return  '<a href="'+AppHelper.baseUrl+'admin/update_bill/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
+						'<a href="'+AppHelper.baseUrl+'admin/details_bill/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>'+
+						'<button type="button" class="btn btn-outline btn-xs btn-primary" id="delete_bill" data-id="'+data+'">Delete</button>';
+			}
 		}],
 		// "footerCallback": function (tfoot, data, start, end, display) {
 		// 	var api = this.api(), data;
@@ -487,36 +557,37 @@ if($("#DatatableHolderAgentBilling").length > 0){
 		
 	});
 
-	$('#applyAgentBillingListfilter').click(function(){ 
-		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+	$('#applyAdminBillingListfilter').click(function(){ 
+		$('#DatatableHolderAdminBilling').DataTable().ajax.reload(); 
 	});
 
-	$('#clearAgentBillingListfilter').click(function(){ 
+	$('#clearAdminBillingListfilter').click(function(){ 
+		$('#agent_id').val("");
 		$('#payment_method').val("");
 		$('#status').val("");
 		$('#daterange').val("");
-		$('#DatatableHolderAgentBilling').DataTable().ajax.reload(); 
+		$('#DatatableHolderAdminBilling').DataTable().ajax.reload(); 
 	});
 
-	$('#DatatableHolderAgentBilling').delegate('#delete_order', 'click', function(){
-		var order_id = $(this).attr('data-id');  
+	$('#DatatableHolderAdminBilling').delegate('#delete_bill', 'click', function(){
+		var bill_id = $(this).attr('data-id');  
 		lnv.confirm({
 			title: 'Confirm',
-			content: 'Are you sure you want to delete this order?',
+			content: 'Are you sure you want to delete this bill?',
 			confirmBtnText: 'Yes',
 			confirmHandler: function(){
 				$.ajax({
 					type: 'POST',
-					url: AppHelper.baseUrl  +'agent/delete_order',
-					data: {order_id : order_id},
+					url: AppHelper.baseUrl  +'admin/delete_bill',
+					data: {bill_id : bill_id},
 					dataType  : 'json',
 					success: function(response){
 						if(response.type == "success"){
 							lnv.alert({
 								title: 'Success',
-								content: 'Your delete request has been sent successfully. The order will be removed after revision of administration.'
+								content: 'Bill has been deleted successfully'
 							}); 
-							 $('#DatatableHolderAgentOrders').DataTable().ajax.reload(); 
+							 $('#DatatableHolderAdminBilling').DataTable().ajax.reload(); 
 						 }else{
 							lnv.alert({
 								title: 'Error',
