@@ -102,7 +102,7 @@ router.get('/agent/update_bill/:bill_id', AgentController.update_bill);
 router.post('/agent/save_bill', 
 [
 	check('payment_method', "Payment method is required").not().isEmpty().trim().escape(),
-    check('transaction_id', 'transaction ID name is required').not().isEmpty().trim().escape(),
+    check('transaction_id', 'Transaction ID is required').not().isEmpty().trim().escape(),
     check('update_date', 'Date is required').not().isEmpty().trim()
 ],
 AgentController.save_bill);
@@ -157,6 +157,43 @@ router.get('/agent/week',  function (request, response, next){
 
     response.status(200).json({
         message : data
+    });
+});
+
+router.get('/agent/testmail',  function (request, response, next){
+    let nodemailer = require('nodemailer');
+
+    let mailerConfig = {    
+        host: "mail.websites.lk",  
+        secureConnection: true,
+        port: 465,
+        auth: {
+            user: "hello@websites.lk",
+            pass: "dfjhd47485"
+        }
+    };
+    let transporter = nodemailer.createTransport(mailerConfig);
+    
+    let mailOptions = {
+        from: "SomePerson@gmail.com",
+        to: 'kella650018@gmail.com',
+        subject: 'Some Subject',
+        html: `<body>` +
+            `<p>Hey Dude</p>` +
+            `</body>`
+    };
+    
+    transporter.sendMail(mailOptions, function (error) {
+        if (error) {
+            //console.log('error:', error);
+            response.status(200).json({
+                message : "error"
+            });
+        } else {
+            response.status(200).json({
+                message : "successs"
+            });
+        }
     });
 });
 
