@@ -107,11 +107,14 @@ router.post('/agent/save_bill',
 ],
 AgentController.save_bill);
 
-router.get('/agent/week',  function (request, response, next){
+router.get('/agent/week', async  function (request, response, next){
+
     const mongoose = require('mongoose');
 
     var currentDate = moment();
+
     var weekStart = currentDate.startOf('week');
+    
     var weekEnd = currentDate.endOf('week');
     
     var days_array = [];
@@ -124,34 +127,36 @@ router.get('/agent/week',  function (request, response, next){
 
     data['weekdata'] = [];
 
-    days_array.forEach(function(sd, index){
+    days_array.forEach( function(sd, index){
 
         data['weekdata'][index] = {
-            "date" : sd
+            "date" : sd,
         };
 
-        data['weekdata'][index]['booking'] = [];
+        data['weekdata'][index]['booking'] = "12";
 
-        Orders_Model.countDocuments({
-            "user_id" : mongoose.Types.ObjectId(request.session.userId),
-            //"order_create_date" :  xd.toString()
-        }, function(err, order_count){
-            // data['weekdata'][index].push({
-            //     "booking" : "5"
-            // });
+        // Orders_Model.countDocuments({
+        //     "user_id" : mongoose.Types.ObjectId(request.session.userId),
+        //     //"order_create_date" :  xd.toString()
+        // }, function(err, order_count){
+        //     // data['weekdata'][index].push({
+        //     //     "booking" : "5"
+        //     // });
 
-            //data['weekdata'][index]["booking"] = order_count;
-            //Object.assign(data['weekdata'][index], data['weekdata'][index]["booking"][index]);;
+        //     //data['weekdata'][index]["booking"] = order_count;
+        //     //Object.assign(data['weekdata'][index], data['weekdata'][index]["booking"][index]);;
            
-            //data.push(order_count);
+        //     //data.push(order_count);
 
-            //data['weekdata'][index]["booking"] = "15";
+        //     //data['weekdata'][index]["booking"] = "15";
 
-            data['weekdata'][index]['booking'].push({
-                'booking' : "15"
-            });
-        });
-        //data['weekdata'][index]["booking"] = "15";
+        //     // data['weekdata'][index]['booking'].push({
+        //     //     'booking' : "15"
+        //     // });
+        //     //data['weekdata'][index]['booking'] = "12";
+        //    // td.push(order_count);
+        // });
+
 
     });
 

@@ -17,5 +17,16 @@ router.post('/auth/login/login_action',
 ],
 AuthController.login_action);
 
+router.get('/auth/forgot', AuthController.forgot);
+
+router.post('/auth/forgot_action', 
+[
+	check('email', "Email is required").not().isEmpty().isEmail()
+],
+AuthController.forgot_action);
+
+router.get('/auth/reset/:token', AuthController.reset);
+
+router.post('/auth/reset_action/:token', AuthController.reset_action);
 
 module.exports = router;

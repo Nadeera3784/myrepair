@@ -34,6 +34,17 @@
                     <div class="table-cell vertical-align-middle auth-form-wrap">
                         <div class="auth-form  ml-auto mr-auto no-float card-view pt-30 pb-30">
                             <div class="row">
+                                <% if (typeof messages.info != "undefined") { %>
+                                    <div class="col-md-12">
+                                        <%- include('notification', {type: 'success', message : messages.info}); %>
+                                    </div>
+                                  <% } %>
+                        
+                                  <% if (typeof messages.danger != "undefined") { %>
+                                    <div class="col-md-12">
+                                        <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                                    </div>
+                                  <% } %>
                                 <div class="col-sm-12 col-xs-12">
                                     <div class="mb-30">
                                         <h3 class="text-center txt-dark mb-10">Sign in to Hotelio</h3>
@@ -55,7 +66,7 @@
                                             <div class="form-group">
                                                 <label class="pull-left control-label mb-10" for="password">Password</label>
                                                 <a class="capitalize-font txt-orange block mb-10 pull-right font-12"
-                                                    href="forgot-password.html">forgot password ?</a>
+                                                    href="<%=helper.base_url()%>auth/forgot">forgot password ?</a>
                                                 <div class="clearfix"></div>
 
                                                 <input type="password" name="password" class="form-control" id="password" placeholder="Enter password">
