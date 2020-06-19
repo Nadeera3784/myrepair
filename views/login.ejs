@@ -34,17 +34,6 @@
                     <div class="table-cell vertical-align-middle auth-form-wrap">
                         <div class="auth-form  ml-auto mr-auto no-float card-view pt-30 pb-30">
                             <div class="row">
-                                <% if (typeof messages.info != "undefined") { %>
-                                    <div class="col-md-12">
-                                        <%- include('notification', {type: 'success', message : messages.info}); %>
-                                    </div>
-                                  <% } %>
-                        
-                                  <% if (typeof messages.danger != "undefined") { %>
-                                    <div class="col-md-12">
-                                        <%- include('notification', {type: 'danger', message : messages.danger}); %>
-                                    </div>
-                                  <% } %>
                                 <div class="col-sm-12 col-xs-12">
                                     <div class="mb-30">
                                         <h3 class="text-center txt-dark mb-10">Sign in to Hotelio</h3>
@@ -52,7 +41,9 @@
                                     </div>
                                     <div class="form-wrap">
                                         <form method="POST" action="<%=helper.base_url()%>auth/login/login_action">
-
+                                            <% if (typeof messages.info != "undefined") { %>
+                                                <%- include('notification', {type: 'success', message : messages.info}); %>
+                                              <% } %>
                                             <% if (typeof messages.danger != "undefined") { %>
                                                 <%- include('notification', {type: 'danger', message : messages.danger}); %>
                                             <% } %>
