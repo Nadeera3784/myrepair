@@ -33,6 +33,7 @@ const AgentController = {
 	},
 	async orders(request, response, next){
 		const brands = await Brands_Model.find({});
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		const beforestylesheets = [
 			"assets/css/select2.css"
 		];
@@ -55,6 +56,7 @@ const AgentController = {
 		response.status(200);
 		response.render("agent/orders", {
 			helper: request.helper,
+			public_announcements : public_announcements,
 			css : stylesheets,
 			beforecss : beforestylesheets,
 			js : javascript,
@@ -66,6 +68,7 @@ const AgentController = {
 		const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD');
 		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId)).populate('subscription_id');
 		const brands = await Brands_Model.find({});
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		Orders_Model.countDocuments({
 			"user_id" : mongoose.Types.ObjectId(request.session.userId),
 			"order_create_date" : {
@@ -94,6 +97,7 @@ const AgentController = {
 				response.status(200);
 				response.render("agent/add_order", {
 					helper: request.helper,
+					public_announcements : public_announcements,
 					beforecss : beforestylesheets,
 					js : javascript,
 					css : stylesheets,
@@ -107,6 +111,7 @@ const AgentController = {
 		const errors = validationResult(request);
 		if (!errors.isEmpty()) {
 			const brands = await Brands_Model.find({});
+			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 			const beforestylesheets = [
 				"assets/css/select2.css"
 			];
@@ -123,6 +128,7 @@ const AgentController = {
 			response.status(400);
 			response.render("agent/add_order", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				beforecss : beforestylesheets,
 				js : javascript,
 				css : stylesheets,
@@ -162,6 +168,7 @@ const AgentController = {
 	async update_order(request, response, next){
 		const order_id = request.params.order_id;
 		const brands = await Brands_Model.find({});
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		await Orders_Model.findById(order_id, function (error, _order) {
 			if (error) return response.redirect(request.helper.base_url() +'agent/orders');
 			const order = _order;
@@ -182,6 +189,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/update_order", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				beforecss : beforestylesheets,
 				js : javascript,
 				css : stylesheets,
@@ -198,6 +206,7 @@ const AgentController = {
 		if (!errors.isEmpty()) {
 			const order = await Orders_Model.findById(order_id);
 			const brands = await Brands_Model.find({});
+			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 			const order_status = ["processing", "rejected", "completed", "repaired"];
 			const beforestylesheets = [
 				"assets/css/select2.css"
@@ -215,6 +224,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/update_order", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				beforecss : beforestylesheets,
 				css : stylesheets,
 				js : javascript,
@@ -244,7 +254,8 @@ const AgentController = {
 	async details_order(request, response, next){
 		const order_id = request.params.order_id;
 		const brands = await Brands_Model.find({});
-		await Orders_Model.findById(order_id, function (error, _order) {
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
+		await Orders_Model.findById(mongoose.Types.ObjectId(order_id), function (error, _order) {
 			if (error) return response.redirect(request.helper.base_url() +'agent/orders');
 			const order = _order;
 			const order_status = ["processing", "rejected", "completed", "repaired"];
@@ -264,6 +275,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/details_order", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				beforecss : beforestylesheets,
 				js : javascript,
 				css : stylesheets,
@@ -287,12 +299,14 @@ const AgentController = {
 	async subscription(request, response, next){
 		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId));
 		const subscriptions = await Subscription_Model.find({});
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		const stylesheets = [
 			"assets/css/app.css",
 		];
 		response.status(200);
 		response.render("agent/subscription", {
 			helper: request.helper,
+			public_announcements : public_announcements,
 			css : stylesheets,
 			user : user,
 			subscriptions : subscriptions
@@ -336,6 +350,7 @@ const AgentController = {
 	},
 	async settings(request, response, next){
 		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId)).populate("subscription_id");
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		const javascript = [
 			"assets/js/validator.js",
 			"assets/js/app.js"
@@ -343,6 +358,7 @@ const AgentController = {
 		response.status(200);
 		response.render("agent/settings", {
 			helper: request.helper,
+			public_announcements : public_announcements,
 			js : javascript,
 			user : user
 		});
@@ -354,6 +370,7 @@ const AgentController = {
 		if (!errors.isEmpty()) {
 			let user = await  User_Model.findById({_id: id});		
 			const subscriptions = await Subscription_Model.find({});	
+			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 			const javascript = [
 				"assets/js/validator.js",
 				"assets/js/app.js"
@@ -361,6 +378,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/settings", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				js : javascript,
 				user   : user,
 				subscriptions : subscriptions,
@@ -387,6 +405,7 @@ const AgentController = {
 	},
 	async change_password(request, response, next){
 		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId));
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		const javascript = [
 			"assets/js/validator.js",
 			"assets/js/app.js"
@@ -394,6 +413,7 @@ const AgentController = {
 		response.status(200);
 		response.render("agent/change_password", {
 			helper: request.helper,
+			public_announcements : public_announcements,
 			js : javascript,
 			user : user
 		});
@@ -403,6 +423,7 @@ const AgentController = {
 		const errors = validationResult(request);
 		if (!errors.isEmpty()) {
 			const user = await User_Model.findById(mongoose.Types.ObjectId(id));
+			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 			const javascript = [
 				"assets/js/validator.js",
 				"assets/js/app.js"
@@ -410,6 +431,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/change_password", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				user : user,
 				js : javascript,
 				password_error  :   errors.mapped().password,
@@ -439,6 +461,7 @@ const AgentController = {
 
 	},
 	async billing(request, response, next){
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		const stylesheets = [
 			"assets/css/jquery.dataTables.min.css",
 			"assets/css/responsive.dataTables.min.css",
@@ -457,12 +480,14 @@ const AgentController = {
 		response.status(200);
 		response.render("agent/billing", {
 			helper: request.helper,
+			public_announcements : public_announcements,
 			js : javascript,
 			css : stylesheets
 		});
 	},
 	async update_bill(request, response, next){
 		const bill_id = request.params.bill_id;
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		await Bill_Model.findById(bill_id, function (error, _bill) {
 			if (error) return response.redirect(request.helper.base_url() +'agent/billing');
 			const bill = _bill;
@@ -478,6 +503,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/update_bill", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				js : javascript,
 				css : stylesheets,
 				bill : bill
@@ -489,7 +515,7 @@ const AgentController = {
 		const errors = validationResult(request);
 		if (!errors.isEmpty()) {
 			const bill = await Bill_Model.findById(mongoose.Types.ObjectId(bill_id));
-			
+			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 			const stylesheets = [
 				"assets/css/daterangepicker.css",
 			];
@@ -502,6 +528,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/update_bill", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				js : javascript,
 				css : stylesheets,
 				payment_method_error  :   errors.mapped().payment_method,
@@ -526,7 +553,22 @@ const AgentController = {
 		}
 
 	},
+	async details_bill(request, response, next){
+		const bill_id = request.params.bill_id;
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
+		await Bill_Model.findById(bill_id, function (error, _bill) {
+			if (error) return response.redirect(request.helper.base_url() +'agent/billing');
+			const bill = _bill;
+			response.status(200);
+			response.render("agent/details_bill", {
+				helper: request.helper,
+				public_announcements : public_announcements,
+				bill : bill
+			});
+		});
+	},
 	async plugins(request, response, next){
+		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		get_all_plugins().then(function(plugin_list) {
 			const stylesheets = [
 				"assets/css/plugins.css",
@@ -534,6 +576,7 @@ const AgentController = {
 			response.status(200);
 			response.render("agent/plugins", {
 				helper: request.helper,
+				public_announcements : public_announcements,
 				css : stylesheets,
 				plugin_list : plugin_list
 			});
