@@ -107,6 +107,8 @@ router.post('/agent/save_bill',
 ],
 AgentController.save_bill);
 
+router.get('/agent/details_bill/:bill_id', AgentController.details_bill);
+
 router.get('/agent/week', async  function (request, response, next){
 
     const mongoose = require('mongoose');
