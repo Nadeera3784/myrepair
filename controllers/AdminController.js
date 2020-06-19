@@ -845,20 +845,9 @@ const AdminController = {
 		await Bill_Model.findById(bill_id, function (error, _bill) {
 			if (error) return response.redirect(request.helper.base_url() +'admin/billing');
 			const bill = _bill;
-			const stylesheets = [
-				"assets/css/daterangepicker.css",
-			];
-			const javascript = [
-				"assets/js/validator.js",
-				"assets/js/moment.js",
-				"assets/js/daterangepicker.js",
-				"assets/js/app.js"
-			];
 			response.status(200);
 			response.render("admin/details_bill", {
 				helper: request.helper,
-				js : javascript,
-				css : stylesheets,
 				bill : bill
 			});
 		}).populate('user_id');
