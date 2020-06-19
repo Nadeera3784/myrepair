@@ -219,7 +219,6 @@ const AuthController = {
                 response.redirect(request.helper.base_url() +'auth/login');
             });
     }
-  
   };
   
   module.exports = AuthController;
