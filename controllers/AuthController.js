@@ -9,6 +9,7 @@ const debug = require('eyes').inspector({styles: {all: 'cyan'}});
 const LanguageHelper = require('../helpers/language.js');
 const {User_Model} = require('../models');
 const config_api = require('../config/api.js');
+const {sendmail}  = require('../libraries/mailer');
 
 const AuthController = {
 
@@ -87,6 +88,7 @@ const AuthController = {
         });
     },
     async forgot_action(request, response, next){
+
         async.waterfall([
             function(done) {
                 crypto.randomBytes(20, function(err, buf) {
@@ -119,30 +121,24 @@ const AuthController = {
                 }
             },
             function(token, user, done) {
-                // var smtpTransport = nodemailer.createTransport('SMTP', {
-                //   service: 'SendGrid',
-                //   auth: {
-                //     user: '!!! YOUR SENDGRID USERNAME !!!',
-                //     pass: '!!! YOUR SENDGRID PASSWORD !!!'
-                //   }
-                // });
-                // var mailOptions = {
-                //   to: user.email,
-                //   from: 'passwordreset@demo.com',
-                //   subject: 'Node.js Password Reset',
-                //   text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                //     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                //     'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-                //     'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-                // };
-                // smtpTransport.sendMail(mailOptions, function(err) {
-                //   req.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-                //   done(err, 'done');
-                // });
-                response.status(200);
-                request.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
-                response.redirect(request.helper.base_url() +'auth/login');
-                //done(user, 'done');
+                
+                var html = 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                 'http://' + request.headers.host + '/auth/reset/' + token + '\n\n' +
+                 'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+
+                sendmail(request, response, "nadeera@codemelabs.com", user.email, "Password Reset", html).then(function(error){
+                    if(error){
+                        response.status(200);
+                        request.flash('danger', 'Something went wrong, please try again later');
+                        response.redirect(request.helper.base_url() +'auth/forgot');
+                    }else{
+                        response.status(200);
+                        request.flash('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+                        response.redirect(request.helper.base_url() +'auth/login');
+                    }
+                });
+
             }
         ], function(err) {
             if (err) return next(err);
@@ -169,10 +165,6 @@ const AuthController = {
             function(done) {
                 User_Model.findOne({ resetPasswordToken: request.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
                   if (!user) {
-                    //req.flash('error', 'Password reset token is invalid or has expired.');
-                    //return res.redirect('back');
-                    //response.status(200);
-                     // response.redirect(request.helper.base_url() +'auth/forgot');
                     request.flash('danger', 'Password reset token is invalid or has expired');
                     return response.redirect('back');
                   }
@@ -190,30 +182,22 @@ const AuthController = {
                 });
               },
             function(user, done) {
-            // var smtpTransport = nodemailer.createTransport('SMTP', {
-            //     service: 'SendGrid',
-            //     auth: {
-            //     user: '!!! YOUR SENDGRID USERNAME !!!',
-            //     pass: '!!! YOUR SENDGRID PASSWORD !!!'
-            //     }
-            // });
-            // var mailOptions = {
-            //     to: user.email,
-            //     from: 'passwordreset@demo.com',
-            //     subject: 'Your password has been changed',
-            //     text: 'Hello,\n\n' +
-            //     'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
-            // };
-            // smtpTransport.sendMail(mailOptions, function(err) {
-            //     req.flash('success', 'Success! Your password has been changed.');
-            //     done(err);
-            // });
+                var html = 'Hello,\n\n' +
+                'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
 
-                request.flash('success', 'Success! Your password has been changed.');
-                done(user);
+                sendmail(request, response, "nadeera@codemelabs.com", user.email, "Your password has been changed", html).then(function(error){
+                    if(error){
+                        response.status(200);
+                        request.flash('danger', 'Something went wrong, please try again later');
+                        response.redirect(request.helper.base_url() +'auth/forgot');
+                    }else{
+                        request.flash('success', 'Success! Your password has been changed.');
+                        done(user);
+                    }
+                });
+                
             }
             ], function(err) {
-                //res.redirect('/');
                 response.status(200);
                 request.flash('info', 'Success! Your password has been changed.');
                 response.redirect(request.helper.base_url() +'auth/login');
