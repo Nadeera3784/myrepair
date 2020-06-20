@@ -165,43 +165,6 @@ router.get('/agent/week', async  function (request, response, next){
     });
 });
 
-router.get('/agent/testmail',  function (request, response, next){
-    let nodemailer = require('nodemailer');
-
-    let mailerConfig = {    
-        host: "mail.websites.lk",  
-        secureConnection: true,
-        port: 465,
-        auth: {
-            user: "hello@websites.lk",
-            pass: "dfjhd47485"
-        }
-    };
-    let transporter = nodemailer.createTransport(mailerConfig);
-    
-    let mailOptions = {
-        from: "SomePerson@gmail.com",
-        to: 'kella650018@gmail.com',
-        subject: 'Some Subject',
-        html: `<body>` +
-            `<p>Hey Dude</p>` +
-            `</body>`
-    };
-    
-    transporter.sendMail(mailOptions, function (error) {
-        if (error) {
-            //console.log('error:', error);
-            response.status(200).json({
-                message : "error"
-            });
-        } else {
-            response.status(200).json({
-                message : "successs"
-            });
-        }
-    });
-});
-
 router.get('/agent/plugins', AgentController.plugins);
 
 router.get('/agent/plugin',  function (request, response, next){
