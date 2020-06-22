@@ -6,7 +6,6 @@
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                 <h5 class="txt-dark">Dashboard</h5>
             </div>
-
             <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="index.html">Dashboard</a></li>
@@ -29,9 +28,12 @@
               <% if (typeof user_private_announcements != "undefined") { %>
                 <% user_private_announcements.forEach(function(ups) { %>
                     <div class="col-md-12">
-                        <div class="alert alert-success" role="alert">
+                        <div class="alert alert-success alert-dismissible" role="alert">
                             <strong><%=ups.announcement_title%></strong>
                             <%=ups.announcement_description%>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
                         </div>
                     </div>
                 <% }); %>
@@ -40,13 +42,122 @@
               <% if (typeof public_announcements != "undefined") { %>
                 <% public_announcements.forEach(function(pps) { %>
                     <div class="col-md-12">
-                        <div class="alert alert-success" role="alert">
+                        <div class="alert alert-success alert-dismissible" role="alert">
                             <strong><%=pps.announcement_title%></strong>
                             <%=pps.announcement_description%>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
                         </div>
                     </div>
                 <% }); %>
               <% } %>
+
+              <div class="col-sm-6 col-xs-12">
+                <div class="panel panel-default card-view pa-0">
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body pa-0">
+                            <div class="sm-data-box">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                            <span class="txt-dark block counter"><span class="counter-anim"><%="Rs . "+agent_current_month_earning_total%></span></span>
+                                            <span class="capitalize-font block">Earnings </span>
+                                        </div>
+                                        <div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+                                            <i class="ti-wallet data-right-rep-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress-anim">
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orange
+                                            wow animated progress-animated" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xs-12">
+                <div class="panel panel-default card-view pa-0">
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body pa-0">
+                            <div class="sm-data-box">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                            <span class="txt-dark block counter"><%=agent_orders_phones%></span>
+                                            <span class="capitalize-font block">Phones</span>
+                                        </div>
+                                        <div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+                                            <i class="ti-mobile   data-right-rep-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="progress-anim">
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-orange
+                                            wow animated progress-animated" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-sm-12 col-xs-12">
+                <div class="panel panel-default border-panel card-view panel-refresh">
+                    <div class="refresh-container">
+                        <div class="la-anim-1"></div>
+                    </div>
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h6 class="panel-title txt-dark">revenue statistics</h6>
+                        </div>
+                        <div class="pull-right">
+                            <a href="#" class="pull-left inline-block refresh mr-15">
+                                <i class="zmdi zmdi-replay"></i>
+                            </a>
+                            <a href="#" class="pull-left inline-block full-screen mr-15">
+                                <i class="zmdi zmdi-fullscreen"></i>
+                            </a>
+                            <div class="pull-left inline-block dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false" role="button"><i class="zmdi zmdi-more-vert"></i></a>
+                                <ul class="dropdown-menu bullet dropdown-menu-right" role="menu">
+                                    <li role="presentation"><a href="javascript:void(0)" role="menuitem"><i class="icon wb-reply" aria-hidden="true"></i>Devices</a></li>
+                                    <li role="presentation"><a href="javascript:void(0)" role="menuitem"><i class="icon wb-share" aria-hidden="true"></i>General</a></li>
+                                    <li role="presentation"><a href="javascript:void(0)" role="menuitem"><i class="icon wb-trash" aria-hidden="true"></i>Referral</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-wrapper collapse in">
+                        <div class="panel-body">
+                            <div class="tab-struct custom-tab-1">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="active" role="presentation"><a aria-expanded="true" data-toggle="tab" role="tab" id="myTab" href="#earningsW">Weekly</a></li>
+                                <li class="" role="presentation"><a aria-expanded="true" data-toggle="tab" role="tab" id="myTab" href="#earningsM">Monthly</a></li>
+                                <li class="" role="presentation"><a aria-expanded="true" data-toggle="tab" role="tab" id="myTab" href="#earningsY">Yearly</a></li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div id="earningsW" class="tab-pane fade active in" role="tabpanel">
+                                    <div id="agent_week_report"></div>
+                                </div> 
+                                <div id="earningsM" class="tab-pane" role="tabpanel">
+                                    <div id="agent_month_report"></div>
+                                </div> 
+                                <div id="earningsY" class="tab-pane" role="tabpanel">
+                                    <div id="agent_year_report"></div>
+                                </div> 
+                            </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
 
         </div>
     
