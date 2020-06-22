@@ -23,12 +23,41 @@ const AgentController = {
 		});
 
 		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
+		const javascript = [
+			"assets/js/raphael.js",
+			"assets/js/morris.js",
+			"assets/js/app.js"
+		];
+		const agent_orders = await Orders_Model.find({
+			user_id: mongoose.Types.ObjectId(request.session.userId),
+			order_create_date: { 
+				$gte: moment().startOf('month').format("YYYY-MM-DD"), 
+				$lte: moment().endOf('month').format("YYYY-MM-DD") 
+			}
+		});
+
+		const agent_orders_phones = await Orders_Model.countDocuments({
+			user_id: mongoose.Types.ObjectId(request.session.userId),
+			order_create_date: { 
+				$gte: moment().startOf('month').format("YYYY-MM-DD"), 
+				$lte: moment().endOf('month').format("YYYY-MM-DD") 
+			}
+		});
+
+		var agent_current_month_earning_total = 0;
+		agent_orders.forEach(function(am){  
+			agent_current_month_earning_total = agent_current_month_earning_total +  am.order_amount;
+		});
+
 
 		response.status(200);
 		response.render("agent/dashboard", {
 			helper: request.helper,
 			user_private_announcements : user_private_announcements,
-			public_announcements : public_announcements
+			public_announcements : public_announcements,
+			agent_current_month_earning_total : agent_current_month_earning_total,
+			agent_orders_phones : agent_orders_phones,
+			js : javascript
 		});
 	},
 	async orders(request, response, next){
@@ -565,6 +594,102 @@ const AgentController = {
 				public_announcements : public_announcements,
 				bill : bill
 			});
+		})	
+	},		
+	async agent_week_report(request, response, next){
+		var currentDate = moment();
+
+		var weekStart = currentDate.startOf('week');
+		
+		var weekEnd = currentDate.endOf('week');
+		
+		var days_array = [];
+	
+		for (i = 0; i <= 6; i++) {
+			days_array.push(moment(weekStart).add(i, 'days').format("MMM-D"));
+		}
+	
+		var data = {};
+	
+		data['weekdata'] = [];
+	
+		days_array.forEach( function(sd, index){
+	
+			data['weekdata'][index] = {
+				"date" : sd,
+			};
+			data['weekdata'][index]['booking'] = "12";
+		});
+	
+		response.status(200).json({
+			message : data
+		});
+	},
+	async agent_month_report(request, response, next){
+
+		var currentDate = moment();
+		
+		var weekStart = currentDate.startOf('month');
+		
+		var weekEnd = currentDate.endOf('month');
+		
+		var days_array = [];
+		
+		var current_month_days = moment().daysInMonth();
+
+		for (i = 0; i <= current_month_days; i++) {
+			days_array.push(moment(weekStart).add(i, 'days').format("MMM-D"));
+		}
+	
+		var data = {};
+	
+		data['weekdata'] = [];
+	
+		days_array.forEach( function(sd, index){
+	
+			data['weekdata'][index] = {
+				"date" : sd,
+			};
+			data['weekdata'][index]['booking'] = "12";
+		});
+	
+		response.status(200).json({
+			message : data
+		});
+	},
+	async agent_year_report(request, response, next){
+
+		var currentDate = moment();
+		
+		var yearStart = currentDate.startOf('year');
+		
+		var yearEnd = currentDate.endOf('year');
+		
+		var days_array = [];
+
+		var m = moment();
+
+		for (i = 0; i <= 12 ; i++) {
+			//days_array.push(moment(yearStart).add(i, 'months').format("MMM"));
+			days_array.push(m.month(i).format('MMMM'));
+		}
+
+		
+	
+		var data = {};
+	
+		data['weekdata'] = [];
+	
+		days_array.forEach( function(sd, index){
+	
+			data['weekdata'][index] = {
+				"date" : sd,
+			};
+			data['weekdata'][index]['booking'] = "12";
+		});
+	
+		response.status(200).json({
+			message : data
 		});
 	},
 	async plugins(request, response, next){

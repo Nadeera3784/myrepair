@@ -638,4 +638,109 @@ if($('#announcement_type').length > 0){
 	});
 }
 
+if($('#agent_week_report').length > 0){
+	$.ajax({
+	  url: AppHelper.baseUrl +"agent/agent_week_report",
+	  method: "GET",
+	  dataType: "json",
+	  success: function(response) {
+		Morris.Bar({
+		  element: 'agent_week_report',
+		  data: response.message.weekdata,
+		  xkey: 'date',
+		  ykeys: ['booking'],
+		  labels: ['Amount(Rs)'],
+		  barRatio: 0.4,
+		  xLabelAngle: 35,
+		  pointSize: 1,
+		  barOpacity: 1,
+		  pointStrokeColors:['#ff6028'],
+		  behaveLikeLine: true,
+		  grid: true,
+		  gridTextColor:'#878787',
+		  hideHover: 'auto',
+		  smooth: true,
+		  barColors: ['#3324f5'],
+		  resize: true,
+		  gridTextFamily:"Roboto"
+		});  
+	  }
+	});
+}
+
+if($('#agent_month_report').length > 0){
+	$.ajax({
+	  url: AppHelper.baseUrl +"agent/agent_month_report",
+	  method: "GET",
+	  dataType: "json",
+	  success: function(response) {
+		Morris.Bar({
+		  element: 'agent_month_report',
+		  data: response.message.weekdata,
+		  xkey: 'date',
+		  ykeys: ['booking'],
+		  labels: ['Amount(Rs)'],
+		  barRatio: 0.4,
+		  xLabelAngle: 35,
+		  pointSize: 1,
+		  barOpacity: 1,
+		  pointStrokeColors:['#ff6028'],
+		  behaveLikeLine: true,
+		  grid: true,
+		  gridTextColor:'#878787',
+		  hideHover: 'auto',
+		  smooth: true,
+		  barColors: ['#3324f5'],
+		  resize: true,
+		  gridTextFamily:"Roboto"
+		});  
+	  }
+	});
+}
+
+if($('#agent_year_report').length > 0){
+	$.ajax({
+	  url: AppHelper.baseUrl +"agent/agent_year_report",
+	  method: "GET",
+	  dataType: "json",
+	  success: function(response) {
+		Morris.Bar({
+		  element: 'agent_year_report',
+		  data: response.message.weekdata,
+		  xkey: 'date',
+		  ykeys: ['booking'],
+		  labels: ['Amount(Rs)'],
+		  barRatio: 0.4,
+		  xLabelAngle: 35,
+		  pointSize: 1,
+		  barOpacity: 1,
+		  pointStrokeColors:['#ff6028'],
+		  behaveLikeLine: true,
+		  grid: true,
+		  gridTextColor:'#878787',
+		  hideHover: 'auto',
+		  smooth: true,
+		  barColors: ['#3324f5'],
+		  resize: true,
+		  gridTextFamily:"Roboto"
+		});  
+	  }
+	});
+}
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+var target = $(e.target).attr("href");
+switch (target) {
+	case "#earningsW":        
+	$(window).trigger('resize');
+	break;
+	case "#earningsM":        
+	$(window).trigger('resize');
+	break;
+	case "#earningsY":        
+	$(window).trigger('resize');
+	break;
+}
+});
+
 });
