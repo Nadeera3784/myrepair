@@ -107,6 +107,12 @@ router.post('/agent/save_bill',
 ],
 AgentController.save_bill);
 
+router.get('/agent/agent_week_report', AgentController.agent_week_report);
+
+router.get('/agent/agent_month_report', AgentController.agent_month_report);
+
+router.get('/agent/agent_year_report', AgentController.agent_year_report);
+
 router.get('/agent/week', async  function (request, response, next){
 
     const mongoose = require('mongoose');
