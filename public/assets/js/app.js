@@ -301,7 +301,39 @@ if($("#DatatableHolderAgentOrders").length > 0){
 			}
 		})	
 	});
-
+  
+	$('#download_agent_exportx').click(function(){
+		var daterange = $('#daterange').val(); 
+		$.ajax({
+			type: 'POST',
+			url: AppHelper.baseUrl  +'agent/agent_export_orders',
+			data: {daterange : daterange},
+			dataType  : 'json',
+			// xhrFields: {
+			// 	responseType: 'blob'
+			// },
+			success: function(response){
+				// var a = document.createElement('a');
+				// var url = window.URL.createObjectURL(response);
+				// a.href = url;
+				// a.download = 'myfile.pdf';
+				// document.body.append(a);
+				// a.click();
+				// a.remove();
+				// window.URL.revokeObjectURL(url);
+				var blob = new Blob([response], { type: 'application/pdf' });
+				var link = document.createElement('a');
+				link.href = window.URL.createObjectURL(blob);
+				link.download = filename;
+		
+				document.body.appendChild(link);
+		
+				link.click();
+		
+				document.body.removeChild(link);
+			}
+		}); 
+	});
 }
 
 if($("#DatatableHolderAdminOrders").length > 0){

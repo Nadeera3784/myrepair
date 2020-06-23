@@ -3,11 +3,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const async = require('async');
 const crypto = require('crypto');
-
+const mongoose = require('mongoose');
 const debug = require('eyes').inspector({styles: {all: 'cyan'}});
 
 const LanguageHelper = require('../helpers/language.js');
-const {User_Model} = require('../models');
+const {User_Model, Subscription_Model} = require('../models');
 const config_api = require('../config/api.js');
 const {sendmail}  = require('../libraries/mailer');
 
@@ -107,6 +107,7 @@ const AuthController = {
                 helper: request.helper
             });
         }else{
+            const subscription = await Subscription_Model.find({subscription_title : "free"});
             const {first_name, last_name, password, email, phone} = request.body;
 			let User = new User_Model({ 
                 first_name : first_name,
@@ -114,7 +115,8 @@ const AuthController = {
                 email : email,
                 phone : phone,
                 password : password,
-                role : 'agent'
+                role : 'agent', 
+                subscription_id : mongoose.Types.ObjectId(subscription._id)
 			});
             await User.save();
             var html = 'Hello '+ first_name+',\n\n' +

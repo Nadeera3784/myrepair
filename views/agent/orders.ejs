@@ -36,6 +36,7 @@
                         <div class="pull-right">
                             <a class="btn btn-primary btn-sm" href="<%=helper.base_url()%>agent/add_order">New</a>
                             <button type="button" class="btn btn-sm btn-default" data-toggle="collapse" data-target="#AgentOrderListfilterElement" aria-expanded="false" aria-controls="AgentOrderListfilterElement">Filter</button>
+                            <button type="button" class="btn btn-sm btn-default" data-toggle="collapse" data-target="#AgentOrderListExportElement" aria-expanded="false" aria-controls="AgentOrderListExportElement">Export</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -67,6 +68,15 @@
                                     <button type="button" name="clearAgentOrderListfilter" id="clearAgentOrderListfilter" class="btn btn-default">Clear</button>
                             </div>
                            </div>  
+                           <div class="form-inline mb-30 collapse"  id="AgentOrderListExportElement">
+                                <!-- <div class="form-group mr-15">
+                                    <input type="text" class="form-control required" id="daterange" name="daterange"  autocomplete="off" placeholder="Select date range">
+                                </div> -->
+                                <div class="form-group">
+                                    <!-- <button type="button" name="download_agent_export" id="download_agent_export" class="btn btn-primary">Download</button> -->
+                                    <a class="btn btn-primary" href="<%=helper.base_url()%>agent/agent_export_orders">Download</a>
+                                </div>
+                           </div> 
                             <table class="table mb-0" id="DatatableHolderAgentOrders">
                                 <thead>
                                   <tr>
