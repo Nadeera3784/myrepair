@@ -5,6 +5,8 @@ const fs      = require('fs');
 const slugify = require('slugify');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const Excel = require('exceljs');
+const tempfile = require('tempfile');
 const moment = require('../libraries/moment.js');
 
 const {User_Model, Announcements_Model, Brands_Model, Orders_Model, Subscription_Model, Bill_Model} = require('../models');
@@ -693,8 +695,6 @@ const AgentController = {
 		});
 	},
 	async agent_export_orders(request, response, next){
-		var Excel = require('exceljs');
-		const tempfile = require('tempfile');
 		var workbook = new Excel.Workbook();
 		var worksheet = workbook.addWorksheet('My Sheet');
 		// worksheet.columns = [
@@ -759,7 +759,7 @@ const AgentController = {
 				order_amount: order.order_amount, 
 				order_fault: order.order_fault, 
 				order_status: order.order_status, 
-				order_delete_request: order.order_delete_request.toLowerCase(), 
+				order_delete_request: order.order_delete_request, 
 				order_create_date: moment(order.order_create_date).format("DD/MM/YYYY"),
 				order_customer_name: order.order_customer_name, 
 				order_customer_phone: order.order_customer_phone, 
