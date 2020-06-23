@@ -651,6 +651,97 @@ const AgentController = {
 			message : data
 		});
 	},
+	async agent_export_orders(request, response, next){
+		var Excel = require('exceljs');
+		const tempfile = require('tempfile');
+		var workbook = new Excel.Workbook();
+		var worksheet = workbook.addWorksheet('My Sheet');
+		// worksheet.columns = [
+        //     { header: 'Id', key: 'id', width: 10 },
+        //     { header: 'Name', key: 'name', width: 20 },
+        //     { header: 'DOB.', key: 'dob', width: 10, style: { numFmt: 'dd/mm/yyyy' }}
+        // ];
+        // worksheet.addRow({
+		// 	id: 1, 
+		// 	name: 'John Doe', 
+		// 	dob: moment().format("DD/MM/YYYY")
+		// });
+		// worksheet.addRow({
+		// 	id: 2, 
+		// 	name: 'Jane Doe', 
+		// 	dob: moment().format("DD/MM/YYYY")
+		// });
+		worksheet.columns = [
+			{ header: 'order_reference', key: 'order_reference', width: 8 },
+			{ header: 'brand_id.', key: 'brand_id', width: 25},
+			{ header: 'order_model', key: 'order_model', width: 5 },
+			{ header: 'user_id', key: 'user_id', width: 25 },
+			{ header: 'order_amount', key: 'order_amount', width: 10 },
+			{ header: 'order_fault', key: 'order_fault', width: 20 },
+			{ header: 'order_status', key: 'order_status', width: 10 },
+			{ header: 'order_delete_request', key: 'order_delete_request', width: 5 },
+			{ header: 'order_create_date', key: 'order_create_date', width: 10 , style: { numFmt: 'dd/mm/yyyy' }},
+			{ header: 'order_customer_name', key: 'order_customer_name', width: 20 },
+			{ header: 'order_customer_phone', key: 'order_customer_phone', width: 10 },
+			{ header: 'order_customer_email', key: 'order_customer_email', width: 15 },
+			{ header: 'order_customer_address', key: 'order_customer_address', width: 30 },
+		];
+
+		var daterange = request.body.daterange || "";
+
+		var searchStr = '';
+
+		if(daterange != ''){
+			var date_array = daterange.split("-");
+			var start_date =  request.helper.date_format(new Date(date_array[0]), "YYYY-MM-DD");
+			var end_date   =  request.helper.date_format(new Date(date_array[1]), "YYYY-MM-DD");
+			var formatted_start_date =  moment.utc(start_date).format();
+			var formatted_end_date =  moment.utc(end_date).format();
+			searchStr = { 
+				'order_create_date': { $gt: formatted_start_date, $lt: formatted_end_date},
+				'user_id' : mongoose.Types.ObjectId(request.session.userId)
+			};
+		}else{
+			 searchStr = {
+				'user_id' : mongoose.Types.ObjectId(request.session.userId)
+			 };
+		}
+	
+
+		const orders = await Orders_Model.find(searchStr);
+        orders.forEach(function(order){
+			worksheet.addRow({
+				order_reference: order.order_reference, 
+				brand_id: order.brand_id, 
+				order_model: order.order_model, 
+				user_id: order.user_id, 
+				order_amount: order.order_amount, 
+				order_fault: order.order_fault, 
+				order_status: order.order_status, 
+				order_delete_request: order.order_delete_request.toLowerCase(), 
+				order_create_date: moment(order.order_create_date).format("DD/MM/YYYY"),
+				order_customer_name: order.order_customer_name, 
+				order_customer_phone: order.order_customer_phone, 
+				order_customer_email: order.order_customer_email, 
+				order_customer_address: order.order_customer_address, 
+            });
+		});
+		var tempFilePath = tempfile('.xlsx');
+        // workbook.xlsx.writeFile(tempFilePath).then(function() {
+		// 	response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		// 	response.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
+		// 	response.end();
+
+        //     // response.sendFile(tempFilePath, function(err){
+        //     //     console.log('---------- error downloading file: ' + err);
+        //     // });
+		// });
+		
+		workbook.xlsx.writeFile(tempFilePath).then(function() {
+			response.download(tempFilePath);
+			//response.sendFile(tempFilePath);
+		});
+	},
 	async plugins(request, response, next){
 		get_all_plugins().then(function(plugin_list) {
 			const stylesheets = [
