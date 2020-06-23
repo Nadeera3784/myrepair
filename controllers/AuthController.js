@@ -81,6 +81,58 @@ const AuthController = {
             });
         }
     },
+    async signup(request, response, next){
+        if(request.session.loggedIn){
+            response.redirect(request.helper.base_url() + request.session.userRole +'/dashboard/');
+        }else{
+            response.status(200);
+            response.render("signup", {
+                helper: request.helper
+            });
+        }
+    },
+
+    async signup_action(request, response, next){
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            console.log(errors);
+            response.status(401);
+            response.render("signup", {
+                first_name_error :   errors.mapped().first_name,
+                last_name_error  :   errors.mapped().last_name,
+                password_error   :  errors.mapped().password,
+                confirm_password_error :  errors.mapped().confirm_password,
+                email_error :  errors.mapped().email,
+                phone_error :   errors.mapped().phone,
+                helper: request.helper
+            });
+        }else{
+            const {first_name, last_name, password, email, phone} = request.body;
+			let User = new User_Model({ 
+                first_name : first_name,
+                last_name : last_name,
+                email : email,
+                phone : phone,
+                password : password,
+                role : 'agent'
+			});
+            await User.save();
+            var html = 'Hello '+ first_name+',\n\n' +
+            'Thanks for signing up!.\n'
+
+            sendmail(request, response, "nadeera@codemelabs.com", email, "Welcome to Myrepair.lk! Get more from the platform", html).then(function(error){
+                if(error){
+                    response.status(200);
+                    request.flash('danger', 'Something went wrong, please try again later');
+                    response.redirect(request.helper.base_url() +'auth/login');
+                }else{
+                    response.status(201);
+                    request.flash('info', 'You have been successfully registered');
+                    response.redirect(request.helper.base_url() +'auth/login');
+                }
+            });
+        }
+    },
     async forgot(request, response, next){
         response.status(200);
         response.render("forgot", {

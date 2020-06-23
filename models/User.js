@@ -107,6 +107,15 @@ UserSchema.static('findUserByEmail', function(email) {
     });
 });
 
+UserSchema.static('findUserByPhone', function(phone) {
+	return new Promise((resolve, reject) => {
+		mongoose.model(_document_name, UserSchema).findOne({phone : phone}).exec(function (err, user){
+		    if (err) reject(err)
+		    resolve(user);
+		});
+    });
+});
+
 module.exports = mongoose.model(_document_name, UserSchema);
 
 

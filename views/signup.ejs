@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>App</title>
+    <meta name="description" content="App" />
+    <meta name="keywords" content="App" />
+    <meta name="author" content="App" />
+    <link href="<%=helper.base_url()%>assets/css/default.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="wrapper  pa-0">
+        <header class="sp-header">
+            <div class="sp-logo-wrap pull-left">
+                <a href="<%=helper.base_url()%>">
+                    <img class="brand-img mr-10" src="<%=helper.base_url()%>assets/images/logo.png" alt="brand" />
+                    <span class="brand-text"><img src="<%=helper.base_url()%>assets/images/brand.png" alt="brand" /></span>
+                </a>
+            </div>
+            <div class="form-group mb-0 pull-right">
+                <span class="inline-block pr-10">Already have an account?</span>
+                <a class="inline-block btn btn-primary btn-rounded " href="<%=helper.base_url()%>auth/login">Sign In</a>
+            </div>
+            <div class="clearfix"></div>
+        </header>
+        <div class="page-wrapper pa-0 ma-0 auth-page">
+            <div class="container">
+                <div class="table-struct full-width full-height">
+                    <div class="table-cell vertical-align-middle auth-form-wrap">
+                        <div class="auth-form  ml-auto mr-auto no-float card-view pt-30 pb-30">
+                            <div class="row">
+                                <% if (typeof messages.info != "undefined") { %>
+                                    <div class="col-md-12">
+                                        <%- include('notification', {type: 'success', message : messages.info}); %>
+                                    </div>
+                                  <% } %>
+                        
+                                  <% if (typeof messages.danger != "undefined") { %>
+                                    <div class="col-md-12">
+                                        <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                                    </div>
+                                  <% } %>
+                                <div class="col-sm-12 col-xs-12">
+                                    <div class="mb-30">
+                                        <h3 class="text-center txt-dark mb-10">Sign in to Myrepair.lk</h3>
+                                        <h6 class="text-center nonecase-font txt-grey">Enter your details below</h6>
+                                    </div>
+                                    <div class="form-wrap">
+                                        <form method="POST" action="<%=helper.base_url()%>auth/signup/signup_action">
+
+                                            <% if (typeof messages.danger != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : messages.danger}); %>
+                                            <% } %>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label mb-10" for="first_name">First name : </label>
+                                                        <input type="text" class="form-control" name="first_name"  id="first_name" placeholder="John">
+                                                        <% if (typeof first_name_error != "undefined") { %>
+                                                            <%- include('notification', {type: 'danger', message : first_name_error.msg}); %>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label mb-10" for="last_name">Last name : </label>
+                                                        <input type="text" class="form-control" name="last_name"  id="last_name" placeholder="Doe">
+                                                        <% if (typeof last_name_error != "undefined") { %>
+                                                            <%- include('notification', {type: 'danger', message : last_name_error.msg}); %>
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label mb-10" for="email">Email : </label>
+                                                <input type="email" class="form-control" name="email"  id="email" placeholder="yourname@gmail.com">
+                                                <% if (typeof email_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : email_error.msg}); %>
+                                                <% } %>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label mb-10" for="phone">Phone : </label>
+                                                <input type="number" class="form-control" name="phone" id="phone" min="0" placeholder="0790000000">
+                                                <% if (typeof phone_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : phone_error.msg}); %>
+                                                <% } %>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="pull-left control-label mb-10" for="password">Password : </label>
+                                                <input type="password" name="password" class="form-control" id="password" placeholder="Enter password">
+                                                <% if (typeof password_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : password_error.msg}); %>
+                                                <% } %>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="pull-left control-label mb-10" for="confirm_password">Confirm Password : </label>
+                                                <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Enter Confirm Password">
+                                                <% if (typeof confirm_password_error != "undefined") { %>
+                                                    <%- include('notification', {type: 'danger', message : confirm_password_error.msg}); %>
+                                                <% } %>
+                                            </div>
+
+                                            <div class="form-group text-center">
+                                                <button type="submit" id="submit" class="btn btn-primary btn-rounded btn-block">create account</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="<%=helper.base_url()%>assets/js/jquery.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/bootstrap.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/jquery.slimscroll.js"></script>
+    <script src="<%=helper.base_url()%>assets/js/plugins.js"></script>
+</body>
+</html>
