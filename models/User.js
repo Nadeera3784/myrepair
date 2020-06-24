@@ -52,6 +52,10 @@ let UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Subscription'
 	},
+	payment_block : {
+		type: Boolean,
+		default : false
+	},
 	accessToken: {
 		type: String
 	},
