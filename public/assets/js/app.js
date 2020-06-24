@@ -389,8 +389,9 @@ if($("#DatatableHolderAdminOrders").length > 0){
 			"render": function ( data, type, row, meta ) {
 				var delete_request_status =  (row.order_delete_request != true)? "request_status_none" : "request_status_active";
 				return  '<a href="'+AppHelper.baseUrl+'admin/update_order/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
-						 '<a href="'+AppHelper.baseUrl+'admin/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>'+
-						'<button type="button" class="btn btn-outline btn-xs btn-primary" id="delete_order" data-id="'+data+'">Delete  <span class="'+delete_request_status+'"></span></button>';
+						'<a href="'+AppHelper.baseUrl+'admin/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>'+
+						'<button type="button" class="btn btn-outline btn-xs btn-primary mr-5" id="delete_order" data-id="'+data+'">Delete  <span class="'+delete_request_status+'"></span></button>'+
+						'<a href="'+AppHelper.baseUrl+'admin/restore_order/'+data+'" class="btn btn-xs btn-default mr-5">Restore</a>';
 			}
 		}]
 		
