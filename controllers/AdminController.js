@@ -767,6 +767,23 @@ const AdminController = {
 		});
 
 	},
+
+	async restore_order(request, response, next){
+		var condition = "";
+		const order_id = request.params.order_id;
+		const order = await Orders_Model.findById(order_id);
+		console.log(order);
+		if(order.order_delete_request == true){
+			condition = false;
+		}else{
+			condition = true;
+		}
+		await Orders_Model.updateOne({_id:order_id},{$set:{order_delete_request:condition}});
+		response.status(200);
+		request.flash('info', 'Orders has been updated successfuly');
+		response.redirect(request.helper.base_url() +'admin/orders');
+	},
+
 	async billing(request, response, next){
 		const users = await User_Model.find({role: 'agent'});
 		const beforestylesheets = [
