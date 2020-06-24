@@ -18,7 +18,7 @@ const config_app       = require('./config/app.js');
 const MongodbHelper    = require('./helpers/mongodb.js');
 const LanguageHelper   = require('./helpers/language.js');
 const moment           = require('./libraries/moment.js');
-const {bill_payment_create}  = require('./libraries/scheduler.js');
+const {bill_payment_create, bill_due_payment_checker}  = require('./libraries/scheduler.js');
 const {get_all_plugins} = require('./plugins/Plugin_interface.js');
 
 const {app_route, user_route, admin_route, agent_route, auth_route}    = require('./routes');
@@ -120,11 +120,12 @@ app.use((request, response, next) => {
 });
 
 
-// const job = new CronJob('1 * * * * *', function() {
-// 	console.log('You will see this message every 1 second');
+const job = new CronJob('1 * * * * *', function() {
+ 	console.log('You will see this message every 1 second');
 // 	bill_payment_create();
-// }, null, true, 'Asia/Colombo');
-//job.start();
+    //bill_due_payment_checker();
+ }, null, true, 'Asia/Colombo');
+job.start();
 
 get_all_plugins().then(function(plugin_list) {
 	plugin_list.forEach(function(pluginName){

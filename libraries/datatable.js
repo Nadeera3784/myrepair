@@ -30,7 +30,8 @@ const DT_agent_order_list = function (request, response, next) {
                     {'order_customer_phone': regex},
                     {'order_reference': regex},
                 ],
-                "user_id" : mongoose.Types.ObjectId(request.session.userId) 
+                "user_id" : mongoose.Types.ObjectId(request.session.userId),
+                "order_delete_request" : { $ne: true } 
 
             };
     }else if(daterange){
@@ -41,11 +42,13 @@ const DT_agent_order_list = function (request, response, next) {
         var formatted_end_date =  moment.utc(end_date).format();
         searchStr = { 
             'order_create_date': { $gt: formatted_start_date, $lt: formatted_end_date}, 
-            "user_id" : mongoose.Types.ObjectId(request.session.userId)
+            "user_id" : mongoose.Types.ObjectId(request.session.userId),
+            "order_delete_request" : { $ne: true }
         };
     }else{
          searchStr = {
-            "user_id" : mongoose.Types.ObjectId(request.session.userId) 
+            "user_id" : mongoose.Types.ObjectId(request.session.userId),
+            "order_delete_request" : { $ne: true }  
          };
     }
 

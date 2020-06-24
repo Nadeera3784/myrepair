@@ -201,6 +201,8 @@ AdminController.save_order);
 
 router.post('/admin/delete_order', AdminController.delete_order);
 
+router.get('/admin/restore_order/:order_id', AdminController.restore_order);
+
 router.post('/admin/populate_DT_admin_billing_list', DT_admin_billing_list);
 
 router.get('/admin/billing', AdminController.billing);

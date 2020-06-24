@@ -95,9 +95,14 @@ const AgentController = {
 		});
 	},
 	async add_order(request, response, next){
+		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId)).populate('subscription_id');
+		if(typeof user.payment_block != "undefined" && user.payment_block == true){
+			response.status(201);
+			request.flash('danger', 'Please settle your outstanding bill payment');
+			response.redirect(request.helper.base_url() +'agent/orders');	
+		}
 		const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
 		const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD');
-		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId)).populate('subscription_id');
 		const brands = await Brands_Model.find({});
 		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
 		Orders_Model.countDocuments({
@@ -197,6 +202,12 @@ const AgentController = {
 		}
 	},
 	async update_order(request, response, next){
+		const user = await User_Model.findById(mongoose.Types.ObjectId(request.session.userId));
+		if(typeof user.payment_block != "undefined" && user.payment_block == true){
+			response.status(201);
+			request.flash('danger', 'Please settle your outstanding bill payment');
+			response.redirect(request.helper.base_url() +'agent/orders');	
+		}
 		const order_id = request.params.order_id;
 		const brands = await Brands_Model.find({});
 		const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
@@ -522,13 +533,9 @@ const AgentController = {
 		await Bill_Model.findById(bill_id, function (error, _bill) {
 			if (error) return response.redirect(request.helper.base_url() +'agent/billing');
 			const bill = _bill;
-			const stylesheets = [
-				"assets/css/daterangepicker.css",
-			];
 			const javascript = [
 				"assets/js/validator.js",
 				"assets/js/moment.js",
-				"assets/js/daterangepicker.js",
 				"assets/js/app.js"
 			];
 			response.status(200);
@@ -536,24 +543,19 @@ const AgentController = {
 				helper: request.helper,
 				public_announcements : public_announcements,
 				js : javascript,
-				css : stylesheets,
 				bill : bill
 			});
 		});
 	},
 	async save_bill(request, response, next){
-		const {payment_method, transaction_id, update_date, bill_id} = request.body;
+		const {payment_method, transaction_id, bill_id} = request.body;
 		const errors = validationResult(request);
 		if (!errors.isEmpty()) {
 			const bill = await Bill_Model.findById(mongoose.Types.ObjectId(bill_id));
 			const public_announcements = await Announcements_Model.find({ announcement_type : "public"});
-			const stylesheets = [
-				"assets/css/daterangepicker.css",
-			];
 			const javascript = [
 				"assets/js/validator.js",
 				"assets/js/moment.js",
-				"assets/js/daterangepicker.js",
 				"assets/js/app.js"
 			];
 			response.status(200);
@@ -561,19 +563,15 @@ const AgentController = {
 				helper: request.helper,
 				public_announcements : public_announcements,
 				js : javascript,
-				css : stylesheets,
 				payment_method_error  :   errors.mapped().payment_method,
 				transaction_id_error  :   errors.mapped().transaction_id,
-				update_date_error     :   errors.mapped().update_date,
 				bill : bill
 			});
 		}else{
-			var formatted_end_date =  new Date(update_date);
-
 			await Bill_Model.findByIdAndUpdate(bill_id, {
 				bill_payment_method   : request.helper.htmlEscaper(payment_method),
 				bill_transaction_id   : transaction_id,
-				bill_update_date      : formatted_end_date,
+				bill_update_date      : new Date(),
 				bill_status           : "processing",
 			}, {new: true, useFindAndModify: false}, function(err, res){
 				if (err) return next(err);

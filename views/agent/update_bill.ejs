@@ -9,7 +9,7 @@
 
             <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="<%=helper.base_url()%>agent/dashboard">Dashboard</a></li>
                     <li class="active"><span>Billing</span></li>
                 </ol>
             </div>
@@ -41,17 +41,6 @@
                     <div class="panel-wrapper collapse in">
                         <div class="panel-body">
                             <form action="<%=helper.base_url()%>agent/save_bill" method="post" accept-charset="utf-8">
-                                <div class="form-group">
-                                    <label class="control-label mb-10" for="payment_method">Payment Method:</label>
-                                    <select name="payment_method" id="payment_method" class="form-control">
-                                        <option value="bank_transfer">Bank Transfer</option>
-                                        <option value="ezcash">eZcash</option>
-                                        <option value="mcash">mCash</option>
-                                    </select>
-                                    <% if (typeof payment_method_error != "undefined") { %>
-                                        <%- include('notification', {type: 'danger', message : payment_method_error.msg}); %>
-                                    <% } %>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -64,10 +53,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label mb-10" for="update_date">Update Date:</label>
-                                            <input type="text" class="form-control" id="singleDatePicker" name="update_date" value="<%=(bill.bill_update_date) ? helper.date_format(new Date(bill.bill_update_date), "YYYY-MM-DD") : "" %>" autocomplete="off">
-                                            <% if (typeof update_date_error != "undefined") { %>
-                                                <%- include('notification', {type: 'danger', message : update_date_error.msg}); %>
+                                            <label class="control-label mb-10" for="payment_method">Payment Method:</label>
+                                            <select name="payment_method" id="payment_method" class="form-control">
+                                                <option value="bank_transfer">Bank Transfer</option>
+                                                <option value="ezcash">eZcash</option>
+                                                <option value="mcash">mCash</option>
+                                            </select>
+                                            <% if (typeof payment_method_error != "undefined") { %>
+                                                <%- include('notification', {type: 'danger', message : payment_method_error.msg}); %>
                                             <% } %>
                                         </div>
                                     </div>
