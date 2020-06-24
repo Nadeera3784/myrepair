@@ -1,15 +1,18 @@
 {
-  "name": "Hotelio",
+  "name": "myrepairlk",
   "version": "1.0.0",
-  "description": "Multi hotel booking system",
+  "engines": {
+    "node": "12.x",
+    "npm": "6.x"
+  },
+  "description": "Mobile phone repair management system",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "Multi hotel booking system"
+    "start": "node app.js"
   },
   "keywords": [
-    "hotel booking",
-    "booking"
+    "Mobile phone",
+    "repair management"
   ],
   "author": "Nadeera",
   "license": "MIT",
