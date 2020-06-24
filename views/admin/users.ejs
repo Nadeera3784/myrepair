@@ -41,6 +41,7 @@
                     </div>
                     <div class="panel-wrapper collapse in">
                         <div class="panel-body">
+                            <%if(typeof users != "undefined"){ %> 
                             <table class="table mb-0" id="DatatableHolder">
                                 <thead>
                                   <tr>
@@ -71,7 +72,14 @@
                                     <% }); %>
                                 </tbody>
                               </table>
-
+                              <%}else{%> 
+                                <blockquote class="pb-25">
+                                  We couldn't find any user. 
+                                  <div class="pull-right">
+                                    <a class="btn btn-primary btn-sm" href="<%=helper.base_url()%>admin/add_user">Add User</a>
+                                  </div>
+                                </blockquote>
+                            <%}%> 
                         </div>
                     </div>
                 </div>
