@@ -120,12 +120,12 @@ app.use((request, response, next) => {
 });
 
 
-const job = new CronJob('* 1 * * * *', function() {
+const job = new CronJob('1 * * * * *', function() {
  	console.log('You will see this message every 1 second');
-    bill_payment_create();
-    bill_due_payment_checker();
+    //bill_payment_create();
+    //bill_due_payment_checker();
  }, null, true, 'Asia/Colombo');
-job.start();
+//job.start();
 
 get_all_plugins().then(function(plugin_list) {
 	plugin_list.forEach(function(pluginName){
