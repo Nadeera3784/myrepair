@@ -14,6 +14,7 @@ const config_app        = require('../config/app.js');
 const {get_all_plugins} = require('../plugins/Plugin_interface.js');
 const RandomizerHelper  = require('../helpers/randomizer.js');
 const {generate_pdf}  = require('../libraries/pdf.js');
+const { concatSeries } = require('async');
 
 const AgentController = {
 
@@ -521,6 +522,29 @@ const AgentController = {
 			});
 		});
 	},
+	async details_bill(request, response, next){
+		const bill_id = request.params.bill_id;
+		await Bill_Model.findById(bill_id, function (error, _bill) {
+			if (error) return response.redirect(request.helper.base_url() +'agent/billing');
+			const bill = _bill;
+			const stylesheets = [
+				"assets/css/daterangepicker.css",
+			];
+			const javascript = [
+				"assets/js/validator.js",
+				"assets/js/moment.js",
+				"assets/js/daterangepicker.js",
+				"assets/js/app.js"
+			];
+			response.status(200);
+			response.render("agent/details_bill", {
+				helper: request.helper,
+				js : javascript,
+				css : stylesheets,
+				bill : bill
+			});
+		}).populate('user_id');
+	},
 	async save_bill(request, response, next){
 		const {payment_method, transaction_id, bill_id} = request.body;
 		const errors = validationResult(request);
@@ -596,21 +620,42 @@ const AgentController = {
 		var current_month_days = moment().daysInMonth();
 
 		for (i = 0; i <= current_month_days; i++) {
-			days_array.push(moment(weekStart).add(i, 'days').format("MMM-D"));
+			days_array.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
 		}
 	
 		var data = {};
 	
 		data['weekdata'] = [];
 	
-		days_array.forEach( function(sd, index){
+		// days_array.forEach( function(sd, index){
 	
-			data['weekdata'][index] = {
-				"date" : sd,
+		// 	data['weekdata'][index] = {
+		// 		"date" : sd,
+		// 	};
+		// 	data['weekdata'][index]['booking'] = "12";
+		// 		//days_array.push(moment(yearStart).add(i, 'months').format("MMM"));
+		// });
+
+		for (i = 0; i <= days_array.length ; i++) { 
+			// var month_count = await Orders_Model.countDocuments({
+			// 	"user_id" : mongoose.Types.ObjectId(request.session.userId),
+			// 	"order_create_date" : days_array[i]
+			// });
+
+
+			data['weekdata'][i] = {
+				"date" : days_array[i],
 			};
-			data['weekdata'][index]['booking'] = "12";
-		});
-	
+
+			// data['weekdata'][i] = {
+			// 	"date" :  moment(days_array[i]).format('MMM'),
+			// };
+
+			data['weekdata'][i]['booking'] = '12';
+
+		}
+		console.log('data', data);;
+
 		response.status(200).json({
 			message : data
 		});
@@ -627,28 +672,35 @@ const AgentController = {
 
 		var m = moment();
 
-		for (i = 0; i <= 12 ; i++) {
-			//days_array.push(moment(yearStart).add(i, 'months').format("MMM"));
-			days_array.push(m.month(i).format('MMMM'));
+		for (i = 0; i <= 11 ; i++) {
+			days_array.push(m.month(i).format('YYYY-MM-DD'));
 		}
 
-		
-	
 		var data = {};
 	
-		data['weekdata'] = [];
+		data['yeardata'] = [];
 	
-		days_array.forEach( function(sd, index){
-	
-			data['weekdata'][index] = {
-				"date" : sd,
+	    for (i = 0; i <= days_array.length ; i++) { 
+			var month_start = moment(days_array[i]).startOf('month');
+			var month_end = moment(days_array[i]).endOf('month');
+			var month_count = await Orders_Model.countDocuments({
+				"user_id" : mongoose.Types.ObjectId(request.session.userId),
+				"order_create_date" : {
+					'$gte': moment(month_start).format("YYYY-MM-DD"), 
+					'$lte': moment(month_end).format("YYYY-MM-DD")
+				}
+			});
+			data['yeardata'][i] = {
+				"date" :  moment(days_array[i]).format('MMM'),
 			};
-			data['weekdata'][index]['booking'] = "12";
-		});
+		    data['yeardata'][i]['booking'] = month_count;
+		}
 	
 		response.status(200).json({
 			message : data
 		});
+
+
 	},
 	async agent_export_orders(request, response, next){
 		var workbook = new Excel.Workbook();
