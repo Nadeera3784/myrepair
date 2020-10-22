@@ -496,7 +496,7 @@ if($("#DatatableHolderAgentBilling").length > 0){
 			"orderable": false,
 			"render": function ( data, type, row, meta ) {
 				return  '<a href="'+AppHelper.baseUrl+'agent/update_bill/'+data+'" class="btn btn-xs btn-primary mr-5">Edit</a>'+
-						'<a href="'+AppHelper.baseUrl+'agent/details_order/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>';
+						'<a href="'+AppHelper.baseUrl+'agent/details_bill/'+data+'" class="btn btn-xs btn-default mr-5">Details</a>';
 			}
 		}]
 		
@@ -739,7 +739,7 @@ if($('#agent_year_report').length > 0){
 	  success: function(response) {
 		Morris.Bar({
 		  element: 'agent_year_report',
-		  data: response.message.weekdata,
+		  data: response.message.yeardata,
 		  xkey: 'date',
 		  ykeys: ['booking'],
 		  labels: ['Amount(Rs)'],
