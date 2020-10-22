@@ -739,7 +739,7 @@ if($('#agent_year_report').length > 0){
 	  success: function(response) {
 		Morris.Bar({
 		  element: 'agent_year_report',
-		  data: response.message.weekdata,
+		  data: response.message.yeardata,
 		  xkey: 'date',
 		  ykeys: ['booking'],
 		  labels: ['Amount(Rs)'],

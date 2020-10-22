@@ -99,6 +99,8 @@ router.get('/agent/billing', AgentController.billing);
 
 router.get('/agent/update_bill/:bill_id', AgentController.update_bill);
 
+router.get('/agent/details_bill/:bill_id', AgentController.details_bill);
+
 router.post('/agent/save_bill', 
 [
 	check('payment_method', "Payment method is required").not().isEmpty().trim().escape(),
